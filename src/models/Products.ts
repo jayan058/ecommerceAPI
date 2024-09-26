@@ -35,7 +35,6 @@ export class ProductModel extends BaseModel {
   }
 
   static async updatePrice(productId: number, newPrice: number) {
-    // Update the price of a product
     await this.queryBuilder()
       .table("products")
       .where("id", productId)
@@ -46,16 +45,41 @@ export class ProductModel extends BaseModel {
     return { id: productId, newPrice };
   }
 
-  static async updateInventory(productId: number, newCount: number) {
-    // Update the inventory count of a product
+  static async updateStock(productId: number, newStock: number) {
     await this.queryBuilder()
       .table("products")
       .where("id", productId)
       .update({
-        inventory_count: newCount,
-        updated_at: new Date().toISOString(),
+        inventory_count: newStock,
       });
-
-    return { id: productId, newCount };
   }
+
+  static async findWithFilters(filters: {
+    category?: string,
+    brand:string,
+    priceRange?: string,
+    name?: string,
+    description?: string,
+    page: number,
+    limit: number,
+}) {
+    const query = this.queryBuilder().select('*').from('products');
+    if (filters.category) {
+        query.where('category', filters.category);
+    }
+    if (filters.brand) {
+        query.where('brand', filters.brand);
+    }
+    if (filters.priceRange) {
+        const [minPrice, maxPrice] = filters.priceRange.split(',');
+        query.whereBetween('price', [Number(minPrice), Number(maxPrice)]);
+    }
+    if (filters.name) {
+        query.where('name', 'ilike', `%${filters.name}%`); 
+    }
+    const offset = (filters.page - 1) * filters.limit;
+    query.limit(filters.limit).offset(offset);
+    const products = await query;
+    return products;
+}
 }

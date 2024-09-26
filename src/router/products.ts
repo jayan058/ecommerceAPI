@@ -15,6 +15,11 @@ productsRoute.post(
   );
   productsRoute.put("/:productId/update-price", authenticate, authorize(["set_prices"]), productController.updatePrice);
 
+  productsRoute.put("/:productId/update-stock", authenticate, authorize(['manage_inventory']), productController.updateStock);
+
+  productsRoute.get('/', authenticate,authorize(['view_products']) ,productController.getProducts);
+
+
 
 
   export default productsRoute;

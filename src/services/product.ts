@@ -15,18 +15,53 @@ import NotFoundError from "../error/notFoundError";
     }
 
     catch(error){
-        throw new ValidationError("Error creating user", " ");
+        throw new ValidationError("Error adding the product", " ");
     }
   }
 
 
   export async function updateProductPrice(productId: number, newPrice: number) {
+    try{
     const productExists = await productModel.ProductModel.findById(productId); 
     if (!productExists) {
         throw new NotFoundError(`Product with ID ${productId} not found`);
     }
 
-    await productModel.ProductModel.updatePrice(productId, newPrice);
+    const updatedProduct=await productModel.ProductModel.updatePrice(productId, newPrice);
+    return {...productExists,price:newPrice}
+}
+catch(error){
+    throw new ValidationError("Error updating the product price", " ");
+
+}
+}
+
+
+export async function updateProductStock(productId: number, newStock: number) {
+    try{
+    const productExists = await productModel.ProductModel.findById(productId); 
+    if (!productExists) {
+        throw new NotFoundError(`Product with ID ${productId} not found`);
+    }
+    const updatedProduct=await productModel.ProductModel.updateStock(productId, newStock);
+    return {...productExists,  inventoryCount: newStock,}
+}
+catch(error){
+    throw new ValidationError("Error updating the product stock", " ");
+}
+}
+
+
+export async function getFilteredProducts(filters: {
+    category: string,
+    brand:string,
+    priceRange: string,
+    name: string,
+    page: number,
+    limit: number,
+}) {
+    const products = await productModel.ProductModel.findWithFilters(filters);
+    return products;
 }
 
 
