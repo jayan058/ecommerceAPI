@@ -53,7 +53,16 @@ export class ProductModel extends BaseModel {
         inventory_count: newStock,
       });
   }
-
+  static async updateStatus(productId: number, isActive: boolean) {
+    await this.queryBuilder()
+      .table("products")
+      .where("id", productId)
+      .update({
+        is_active: isActive,
+        updated_at: this.queryBuilder().fn.now(),
+      });
+  }
+  
   static async findWithFilters(filters: {
     category?: string,
     brand:string,

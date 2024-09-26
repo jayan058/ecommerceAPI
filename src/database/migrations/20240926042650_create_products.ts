@@ -17,7 +17,10 @@ export async function up(knex: Knex): Promise<void> {
     table.decimal('price', 10, 2).notNullable(); // Price with two decimal places
     table.integer('inventory_count').notNullable(); // Inventory count
     table.text('description');
+    table.boolean('is_active').notNullable().defaultTo(true); // Indicates if the product is active   
     table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()')); ;
+    table.timestamp('updated_at').defaultTo(knex.fn.now());
+ 
   });
 }
 

@@ -43,8 +43,16 @@ export async function updateProductStock(productId: number, newStock: number) {
     if (!productExists) {
         throw new NotFoundError(`Product with ID ${productId} not found`);
     }
-    const updatedProduct=await productModel.ProductModel.updateStock(productId, newStock);
-    return {...productExists,  inventoryCount: newStock,}
+   await productModel.ProductModel.updateStock(productId, newStock);
+   if (newStock === 0) {
+    await productModel.ProductModel.updateStatus(productId, false); // Mark as inactive
+  } else {
+    await productModel.ProductModel.updateStatus(productId, true); // Mark as active
+  }
+   const updatedProduct = await productModel.ProductModel.findById(productId);
+      console.log(updatedProduct);
+      
+      return updatedProduct;
 }
 catch(error){
     throw new ValidationError("Error updating the product stock", " ");
