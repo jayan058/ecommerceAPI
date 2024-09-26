@@ -45,9 +45,9 @@ export async function updateProductStock(productId: number, newStock: number) {
     }
    await productModel.ProductModel.updateStock(productId, newStock);
    if (newStock === 0) {
-    await productModel.ProductModel.updateStatus(productId, false); // Mark as inactive
+    await productModel.ProductModel.updateStatus(productId, false); 
   } else {
-    await productModel.ProductModel.updateStatus(productId, true); // Mark as active
+    await productModel.ProductModel.updateStatus(productId, true); 
   }
    const updatedProduct = await productModel.ProductModel.findById(productId);
       console.log(updatedProduct);

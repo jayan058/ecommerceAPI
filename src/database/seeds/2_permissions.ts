@@ -16,6 +16,7 @@ export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_NAME).insert([
     { name: 'add_to_cart' },
     { name: 'remove_from_cart' },
+    { name: 'view_cart' },
     { name: 'view_products' },
     { name: 'search_products' },
     { name: 'checkout' },

@@ -72,7 +72,7 @@ export class ProductModel extends BaseModel {
     page: number,
     limit: number,
 }) {
-    const query = this.queryBuilder().select('*').from('products');
+    const query = this.queryBuilder().select('*').from('products');  
     if (filters.category) {
         query.where('category', filters.category);
     }
@@ -88,7 +88,8 @@ export class ProductModel extends BaseModel {
     }
     const offset = (filters.page - 1) * filters.limit;
     query.limit(filters.limit).offset(offset);
-    const products = await query;
+    query.orderBy('id', 'asc');
+    const products = await query;  
     return products;
 }
 }
