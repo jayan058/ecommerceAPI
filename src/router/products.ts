@@ -1,6 +1,6 @@
 import express from "express";
 import * as productController from "../controller/products";
-import { validateBody } from "../middleware/validation";
+import { validateBody,validateQuery } from "../middleware/validation";
 import * as productSchema from "../schema/product";
 import { authorize, authenticate } from "../middleware/auth";
 
@@ -33,6 +33,7 @@ productsRoute.get(
   "/",
   authenticate,
   authorize(["view_products"]),
+  validateQuery(productSchema.productQuerySchema),
   productController.getProducts,
 );
 

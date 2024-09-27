@@ -6,7 +6,7 @@ import ValidationError from "../error/validationError";
 
 async function checkProductAvailability(
   productId: number,
-  requestedQuantity?: number
+  requestedQuantity?: number,
 ) {
   const product = await productModel.ProductModel.findById(productId);
   if (!product) {
@@ -14,7 +14,7 @@ async function checkProductAvailability(
   }
   if (requestedQuantity && requestedQuantity > product.inventoryCount) {
     throw new BadRequestError(
-      `Your desired quantity exceeds our available stock`
+      `Your desired quantity exceeds our available stock`,
     );
   }
   return product;
@@ -31,19 +31,19 @@ async function updateProductStatus(productId: number, inventoryCount: number) {
 export async function addToCart(
   userId: string,
   productId: number,
-  quantity: number
+  quantity: number,
 ) {
   try {
     const product = await checkProductAvailability(productId, quantity);
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId
+      productId,
     );
 
     if (existingCartItem) {
       await cartModel.CartModel.updateCartQuantity(
         existingCartItem.id,
-        existingCartItem.quantity + quantity
+        existingCartItem.quantity + quantity,
       );
     } else {
       await cartModel.CartModel.addToCart(userId, productId, quantity);
@@ -56,7 +56,7 @@ export async function addToCart(
 
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount
+      updatedInventoryCount,
     );
     await updateProductStatus(productId, updatedInventoryCount);
 
@@ -94,13 +94,13 @@ export async function viewCart(userId: string) {
 export async function updateCart(
   userId: string,
   productId: number,
-  newQuantity: number
+  newQuantity: number,
 ) {
   try {
     const product = await checkProductAvailability(productId);
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId
+      productId,
     );
 
     if (!existingCartItem) {
@@ -113,7 +113,7 @@ export async function updateCart(
     if (quantityDifference > 0) {
       if (quantityDifference > product.inventoryCount) {
         throw new BadRequestError(
-          `Not enough stock available. Max available: ${product.inventoryCount}`
+          `Not enough stock available. Max available: ${product.inventoryCount}`,
         );
       }
     }
@@ -125,11 +125,11 @@ export async function updateCart(
 
     await cartModel.CartModel.updateCartQuantity(
       existingCartItem.id,
-      newQuantity
+      newQuantity,
     );
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount
+      updatedInventoryCount,
     );
     await updateProductStatus(productId, updatedInventoryCount);
 
@@ -141,17 +141,17 @@ export async function updateCart(
 }
 export async function deleteCartItem(
   userId: string,
-  productId: number
+  productId: number,
 ): Promise<string> {
   try {
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId
+      productId,
     );
-      
+
     if (!existingCartItem) {
       throw new NotFoundError(
-        `Product with id ${productId} not found in the cart`
+        `Product with id ${productId} not found in the cart`,
       );
     }
 
@@ -166,7 +166,7 @@ export async function deleteCartItem(
 
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount
+      updatedInventoryCount,
     );
     await updateProductStatus(productId, updatedInventoryCount);
 
@@ -174,7 +174,7 @@ export async function deleteCartItem(
   } catch (error) {
     throw new ValidationError(
       `Error deleting product from cart: ${error.message}`,
-      " "
+      " ",
     );
   }
 }

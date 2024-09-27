@@ -20,7 +20,7 @@ export class CartModel extends BaseModel {
       .select("*")
       .from("cart")
       .where({ user_id: userId, product_id: productId })
-      .first()
+      .first();
   }
 
   static async updateCartQuantity(cartItemId: number, newQuantity: number) {

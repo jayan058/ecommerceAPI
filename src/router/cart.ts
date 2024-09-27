@@ -9,20 +9,20 @@ cartRoute.post(
   validateBody(cartSchema.addToCartSchema),
   authenticate,
   authorize(["add_to_cart"]),
-  cartController.addToCart
+  cartController.addToCart,
 );
 cartRoute.get(
   "/",
   authenticate,
   authorize(["view_cart"]),
-  cartController.viewCart
+  cartController.viewCart,
 );
 cartRoute.put(
   "/:productId",
   validateBody(cartSchema.updateCartSchema),
   authenticate,
   authorize(["view_cart"]),
-  cartController.updateCart
+  cartController.updateCart,
 );
 
 cartRoute.delete(
@@ -30,6 +30,6 @@ cartRoute.delete(
   authenticate,
   authorize(["remove_from_cart"]),
   validateParams(cartSchema.deleteCartItemSchema),
-  cartController.deleteFromCart
+  cartController.deleteFromCart,
 );
 export default cartRoute;

@@ -23,3 +23,15 @@ export function validateParams(schema: ObjectSchema) {
     }
   };
 }
+
+
+export function validateQuery(schema: ObjectSchema) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const { error } = schema.validate(req.query);
+    if (error) {
+      next(new BadRequestError(error.details[0].message));
+    } else {
+      next();
+    }
+  };
+}

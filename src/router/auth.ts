@@ -5,5 +5,9 @@ import * as userSchema from "../schema/user";
 
 const authRoute = express();
 
-authRoute.post("/",validateBody(userSchema.loginUserSchema), authController.login);
+authRoute.post(
+  "/",
+  validateBody(userSchema.loginUserSchema),
+  authController.login,
+);
 export default authRoute;

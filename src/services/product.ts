@@ -23,11 +23,7 @@ export async function updateProductPrice(productId: number, newPrice: number) {
     if (!productExists) {
       throw new NotFoundError(`Product with ID ${productId} not found`);
     }
-
-    const updatedProduct = await productModel.ProductModel.updatePrice(
-      productId,
-      newPrice,
-    );
+    await productModel.ProductModel.updatePrice(productId, newPrice);
     return { ...productExists, price: newPrice };
   } catch (error) {
     throw new ValidationError("Error updating the product price", " ");
