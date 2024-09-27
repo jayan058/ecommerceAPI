@@ -33,5 +33,14 @@ static async updateCartQuantity(cartItemId: number, newQuantity: number) {
         .update({ quantity: newQuantity });
 }
 
+static async findByUserId(userId: string) {
+    return await this.queryBuilder()
+        .select('cart.*', 'products.name as productName', 'products.brand as productBrand', 'products.category as productCategory')
+        .from('cart')
+        .innerJoin('products', 'cart.product_id', 'products.id')
+        .where('cart.user_id', userId)
+        .orderBy('cart.quantity','desc')
+}
+
 
 }
