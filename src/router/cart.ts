@@ -4,7 +4,8 @@ import {authenticate,authorize} from '../middleware/auth';
 
 const cartRoute = express.Router();
 cartRoute.post('/', authenticate, authorize(["add_to_cart"]),cartController.addToCart);
-
+cartRoute.get('/', authenticate, authorize(["view_cart"]),cartController.viewCart);
+cartRoute.put('/:productId', authenticate, authorize(["view_cart"]),cartController.updateCart); 
 
 
 

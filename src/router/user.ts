@@ -1,6 +1,6 @@
 import express from "express";
 import * as userController from "../controller/user";
-import { validateBody, validateParams } from "../middleware/validation";
+import { validateBody} from "../middleware/validation";
 import * as userSchema from "../schema/user";
 
 const userRoute = express();

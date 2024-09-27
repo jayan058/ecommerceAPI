@@ -2,8 +2,6 @@ import bcrypt from "bcrypt";
 import * as userModels from "../models/User";
 import { BCRYPT_SALT_ROUNDS } from "../constants";
 import ConflictError from "../error/conflictError";
-import ValidationError from "../error/validationError";
-
 export async function createUser(
     name: string,
     email: string,
@@ -21,7 +19,7 @@ export async function createUser(
       );
       return data;
     } catch (error) {
-      throw new ValidationError("Error creating user", " ");
+      throw(error)
       
     }
   }

@@ -50,7 +50,6 @@ export async function updateProductStock(productId: number, newStock: number) {
     await productModel.ProductModel.updateStatus(productId, true); 
   }
    const updatedProduct = await productModel.ProductModel.findById(productId);
-      console.log(updatedProduct);
       
       return updatedProduct;
 }

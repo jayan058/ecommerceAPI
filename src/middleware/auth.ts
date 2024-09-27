@@ -13,7 +13,6 @@ export function authenticate(
   next: NextFunction
 ) {
   const { headers } = req;
-  console.log(headers);
   if (!headers.authorization) {
     next(new UnauthorizedError("Unauthenticated"));
     return;

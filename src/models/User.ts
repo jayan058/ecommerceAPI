@@ -1,7 +1,6 @@
 import BaseModel from "./baseModel";
 export class UserModel extends BaseModel {
   static async create(name: string, email: string, password: string) {
-
     
     const userToCreate = {
       username: name,
@@ -35,7 +34,6 @@ export class UserModel extends BaseModel {
   }
 
   static async findUserPermission(email) {
-    console.log(email);
     
     let permissions = await this.queryBuilder()
       .select("permissions.name")
