@@ -3,49 +3,63 @@ import * as cartModel from "../models/cart";
 import * as productModel from "../models/Products";
 import BadRequestError from "../error/badRequestError";
 import ValidationError from "../error/validationError";
+
+async function checkProductAvailability(
+  productId: number,
+  requestedQuantity?: number
+) {
+  const product = await productModel.ProductModel.findById(productId);
+  if (!product) {
+    throw new NotFoundError(`Product with id:${productId} not found`);
+  }
+  if (requestedQuantity && requestedQuantity > product.inventoryCount) {
+    throw new BadRequestError(
+      `Your desired quantity exceeds our available stock`
+    );
+  }
+  return product;
+}
+
+async function updateProductStatus(productId: number, inventoryCount: number) {
+  if (inventoryCount === 0) {
+    await productModel.ProductModel.updateStatus(productId, false);
+  } else {
+    await productModel.ProductModel.updateStatus(productId, true);
+  }
+}
+
 export async function addToCart(
   userId: string,
   productId: number,
-  quantity: number,
+  quantity: number
 ) {
   try {
-    const product = await productModel.ProductModel.findById(productId);
-    if (!product) {
-      throw new NotFoundError(`Product with id:${productId} not found`);
-    }
-
-    if (product.inventoryCount <= 0) {
-      throw new NotFoundError(`Product is currently out of stock`);
-    }
+    const product = await checkProductAvailability(productId, quantity);
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId,
+      productId
     );
-    if (quantity > product.inventoryCount) {
-      throw new BadRequestError(
-        `Your desired quantity exceeds our available stock`,
-      );
-    }
+
     if (existingCartItem) {
       await cartModel.CartModel.updateCartQuantity(
         existingCartItem.id,
-        existingCartItem.quantity + quantity,
+        existingCartItem.quantity + quantity
       );
     } else {
       await cartModel.CartModel.addToCart(userId, productId, quantity);
     }
+
     const updatedInventoryCount = product.inventoryCount - quantity;
     if (updatedInventoryCount < 0) {
-      throw new BadRequestError(`Inventory count cant be less than zero`);
-    }
-    if (updatedInventoryCount == 0) {
-      await productModel.ProductModel.updateStatus(product.id, false);
+      throw new BadRequestError(`Inventory count can't be less than zero`);
     }
 
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount,
+      updatedInventoryCount
     );
+    await updateProductStatus(productId, updatedInventoryCount);
+
     const updatedCart = await cartModel.CartModel.findByUserId(userId);
     return updatedCart.map((item) => ({
       id: item.productId,
@@ -80,50 +94,44 @@ export async function viewCart(userId: string) {
 export async function updateCart(
   userId: string,
   productId: number,
-  newQuantity: number,
+  newQuantity: number
 ) {
   try {
-    const product = await productModel.ProductModel.findById(productId);
-    if (!product)
-      throw new NotFoundError(`Product with id: ${productId} not found`);
-
+    const product = await checkProductAvailability(productId);
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId,
+      productId
     );
-    if (!existingCartItem)
+
+    if (!existingCartItem) {
       throw new NotFoundError(`Product not found in the cart`);
+    }
 
     const existingQuantity = existingCartItem.quantity;
     const quantityDifference = newQuantity - existingQuantity;
 
     if (quantityDifference > 0) {
       if (quantityDifference > product.inventoryCount) {
-        throw new NotFoundError(
-          `Not enough stock available. Max available: ${product.inventoryCount}`,
+        throw new BadRequestError(
+          `Not enough stock available. Max available: ${product.inventoryCount}`
         );
       }
     }
 
     const updatedInventoryCount = product.inventoryCount - quantityDifference;
-
     if (updatedInventoryCount < 0) {
       throw new BadRequestError(`Inventory count cannot be less than zero`);
     }
 
     await cartModel.CartModel.updateCartQuantity(
       existingCartItem.id,
-      newQuantity,
+      newQuantity
     );
-
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount,
+      updatedInventoryCount
     );
-
-    if (updatedInventoryCount === 0) {
-      await productModel.ProductModel.updateStatus(product.id, false);
-    }
+    await updateProductStatus(productId, updatedInventoryCount);
 
     const updatedCart = await viewCart(userId);
     return updatedCart;
@@ -131,19 +139,19 @@ export async function updateCart(
     throw error;
   }
 }
-
 export async function deleteCartItem(
   userId: string,
-  productId: number,
+  productId: number
 ): Promise<string> {
   try {
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId,
+      productId
     );
+      
     if (!existingCartItem) {
       throw new NotFoundError(
-        `Product with id ${productId} not found in the cart`,
+        `Product with id ${productId} not found in the cart`
       );
     }
 
@@ -153,20 +161,20 @@ export async function deleteCartItem(
     }
 
     await cartModel.CartModel.deleteCartItem(existingCartItem.id);
-
     const updatedInventoryCount =
       product.inventoryCount + existingCartItem.quantity;
 
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount,
+      updatedInventoryCount
     );
+    await updateProductStatus(productId, updatedInventoryCount);
 
     return `Product with id ${productId} removed from cart, and inventory updated successfully.`;
   } catch (error) {
     throw new ValidationError(
       `Error deleting product from cart: ${error.message}`,
-      " ",
+      " "
     );
   }
 }
