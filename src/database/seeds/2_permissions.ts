@@ -1,6 +1,6 @@
-import { Knex } from 'knex';
+import { Knex } from "knex";
 
-const TABLE_NAME = 'permissions';
+const TABLE_NAME = "permissions";
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.
@@ -14,17 +14,16 @@ export async function seed(knex: Knex): Promise<void> {
 
   // Inserts seed entries
   await knex(TABLE_NAME).insert([
-    { name: 'add_to_cart' },
-    { name: 'remove_from_cart' },
-    { name: 'view_cart' },
-    { name: 'view_products' },
-    { name: 'search_products' },
-    { name: 'checkout' },
-    { name: 'add_products' },
-    { name: 'set_prices' },
-    { name: 'manage_inventory' },
-    { name: 'view_all_orders' },
-    { name: 'manage_users' }
+    { name: "add_to_cart" },
+    { name: "remove_from_cart" },
+    { name: "view_cart" },
+    { name: "view_products" },
+    { name: "search_products" },
+    { name: "checkout" },
+    { name: "add_products" },
+    { name: "set_prices" },
+    { name: "manage_inventory" },
+    { name: "view_all_orders" },
+    { name: "manage_users" },
   ]);
 }
-

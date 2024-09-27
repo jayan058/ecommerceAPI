@@ -1,7 +1,6 @@
 import BaseModel from "./baseModel";
 export class UserModel extends BaseModel {
   static async create(name: string, email: string, password: string) {
-    
     const userToCreate = {
       username: name,
       password: password,
@@ -14,17 +13,16 @@ export class UserModel extends BaseModel {
       .select("id")
       .table("users")
       .where("email", email);
-    
-       
+
     const role = {
       role_id: 2,
       user_id: userId[0].id,
     };
     await this.queryBuilder().insert(role).table("user_roles");
-    return { name: name, email: email, password: password }
+    return { name: name, email: email, password: password };
   }
 
-  static async findByEmail(email:string) {
+  static async findByEmail(email: string) {
     let matchingEmail = await this.queryBuilder()
       .select("*")
       .from("users")
@@ -34,7 +32,6 @@ export class UserModel extends BaseModel {
   }
 
   static async findUserPermission(email) {
-    
     let permissions = await this.queryBuilder()
       .select("permissions.name")
       .from("users")
@@ -43,9 +40,7 @@ export class UserModel extends BaseModel {
       .join("role_permissions", "roles.id", "role_permissions.role_id")
       .join("permissions", "role_permissions.permission_id", "permissions.id")
       .where("email", email);
-  
+
     return permissions;
   }
-
-
 }

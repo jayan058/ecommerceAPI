@@ -1,10 +1,10 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "../middleware/auth";
 import * as cartService from "../services/cart";
 export async function addToCart(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const userId = req.user.id;
 
@@ -20,7 +20,7 @@ export async function addToCart(
 export async function viewCart(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const userId = req.user.id;
@@ -33,7 +33,7 @@ export async function viewCart(
 export async function updateCart(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const userId = req.user.id;
@@ -42,9 +42,26 @@ export async function updateCart(
     const updatedCart = await cartService.updateCart(
       userId,
       productId,
-      quantity
+      quantity,
     );
     res.json(updatedCart);
+  } catch (error) {
+    next(error);
+  }
+}
+export async function deleteFromCart(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const userId = req.user.id;
+    const productId = parseInt(req.params.productId, 10);
+    await cartService.deleteCartItem(userId, productId);
+    res.json({
+      success: true,
+      message: "Product removed from cart successfully.",
+    });
   } catch (error) {
     next(error);
   }

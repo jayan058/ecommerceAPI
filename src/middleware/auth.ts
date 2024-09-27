@@ -10,15 +10,14 @@ export interface AuthenticatedRequest extends Request {
 export function authenticate(
   req: AuthenticatedRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { headers } = req;
   if (!headers.authorization) {
     next(new UnauthorizedError("Unauthenticated"));
     return;
   }
-  
-  
+
   const token = headers.authorization.split(" ");
   if (token.length !== 2 || token[0] !== "Bearer") {
     next(new UnauthorizedError("Unauthenticated"));
@@ -45,12 +44,12 @@ export function authenticate(
 }
 export function authorize(requiredPermissions: string[]) {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-    const user = req.user;  
-    const hasPermission = requiredPermissions.every(permission => 
-      user.permissions.includes(permission)
+    const user = req.user;
+    const hasPermission = requiredPermissions.every((permission) =>
+      user.permissions.includes(permission),
     );
     if (!hasPermission) {
-       next(new ForbiddenError("Forbidden")); 
+      next(new ForbiddenError("Forbidden"));
     }
     next();
   };

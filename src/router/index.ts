@@ -10,5 +10,4 @@ router.use("/login", authRoute);
 router.use("/product", productsRoute);
 router.use("/cart", cartRoute);
 
-
 export default router;

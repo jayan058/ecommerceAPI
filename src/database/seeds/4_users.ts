@@ -18,8 +18,8 @@ export function seed(knex: Knex): Promise<void> {
           email: "jaya@jaya.com",
           password:
             "$2b$10$WRtpcSefdl/Q6UvAiVdMau.wEOAOzw8ldCuO/zVyDft.WqHCtr2cG",
-          updated_at:new Date().toISOString(),
-          created_at:new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
         },
       ]);
     });

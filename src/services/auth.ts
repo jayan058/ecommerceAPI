@@ -41,6 +41,4 @@ export async function login(email: string, password: string, res: Response) {
     accessToken: accessToken,
     refreshToken: refreshToken,
   });
-
-
 }

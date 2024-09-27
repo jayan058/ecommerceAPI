@@ -1,8 +1,8 @@
-import { Knex } from 'knex';
+import { Knex } from "knex";
 
-const ROLE_PERMISSIONS_TABLE = 'role_permissions';
-const ROLES_TABLE = 'roles';
-const PERMISSIONS_TABLE = 'permissions';
+const ROLE_PERMISSIONS_TABLE = "role_permissions";
+const ROLES_TABLE = "roles";
+const PERMISSIONS_TABLE = "permissions";
 
 /**
  * Create role_permissions table.
@@ -12,19 +12,21 @@ const PERMISSIONS_TABLE = 'permissions';
  */
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(ROLE_PERMISSIONS_TABLE, (table) => {
-    table.bigIncrements('id'); // Primary key
-    table.bigInteger('role_id')
+    table.bigIncrements("id"); // Primary key
+    table
+      .bigInteger("role_id")
       .unsigned()
       .notNullable()
-      .references('id')
+      .references("id")
       .inTable(ROLES_TABLE)
-      .onDelete('CASCADE'); // Foreign key referencing roles
-    table.bigInteger('permission_id')
+      .onDelete("CASCADE"); // Foreign key referencing roles
+    table
+      .bigInteger("permission_id")
       .unsigned()
       .notNullable()
-      .references('id')
+      .references("id")
       .inTable(PERMISSIONS_TABLE)
-      .onDelete('CASCADE'); // Foreign key referencing permissions
+      .onDelete("CASCADE"); // Foreign key referencing permissions
   });
 }
 

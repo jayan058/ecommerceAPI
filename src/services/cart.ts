@@ -2,10 +2,11 @@ import NotFoundError from "../error/notFoundError";
 import * as cartModel from "../models/cart";
 import * as productModel from "../models/Products";
 import BadRequestError from "../error/badRequestError";
+import ValidationError from "../error/validationError";
 export async function addToCart(
   userId: string,
   productId: number,
-  quantity: number
+  quantity: number,
 ) {
   try {
     const product = await productModel.ProductModel.findById(productId);
@@ -18,15 +19,17 @@ export async function addToCart(
     }
     const existingCartItem = await cartModel.CartModel.findByProductId(
       userId,
-      productId
+      productId,
     );
     if (quantity > product.inventoryCount) {
-      throw new BadRequestError(`Your desired quantity exceeds our available stock`);
+      throw new BadRequestError(
+        `Your desired quantity exceeds our available stock`,
+      );
     }
     if (existingCartItem) {
       await cartModel.CartModel.updateCartQuantity(
         existingCartItem.id,
-        existingCartItem.quantity + quantity
+        existingCartItem.quantity + quantity,
       );
     } else {
       await cartModel.CartModel.addToCart(userId, productId, quantity);
@@ -35,14 +38,13 @@ export async function addToCart(
     if (updatedInventoryCount < 0) {
       throw new BadRequestError(`Inventory count cant be less than zero`);
     }
-    if (updatedInventoryCount ==0 ) {
-        await productModel.ProductModel.updateStatus(product.id, false); 
-      }
-    
+    if (updatedInventoryCount == 0) {
+      await productModel.ProductModel.updateStatus(product.id, false);
+    }
 
     await productModel.ProductModel.updateStock(
       productId,
-      updatedInventoryCount
+      updatedInventoryCount,
     );
     const updatedCart = await cartModel.CartModel.findByUserId(userId);
     return updatedCart.map((item) => ({
@@ -57,13 +59,12 @@ export async function addToCart(
   }
 }
 
-
 export async function viewCart(userId: string) {
-  try{
-    const userCart = await cartModel.CartModel.findByUserId(userId);  
+  try {
+    const userCart = await cartModel.CartModel.findByUserId(userId);
     if (userCart.length === 0) {
-    throw new NotFoundError("The cart is empty.");
-  }
+      throw new NotFoundError("The cart is empty.");
+    }
     return userCart.map((item) => ({
       id: item.productId,
       name: item.productName,
@@ -71,29 +72,36 @@ export async function viewCart(userId: string) {
       category: item.productCategory,
       quantity: item.quantity,
     }));
-
-  }
-  catch(error){
-    throw(error)
+  } catch (error) {
+    throw error;
   }
 }
 
-
-export async function updateCart(userId: string, productId: number, newQuantity: number) {
+export async function updateCart(
+  userId: string,
+  productId: number,
+  newQuantity: number,
+) {
   try {
     const product = await productModel.ProductModel.findById(productId);
-    if (!product) throw new NotFoundError(`Product with id: ${productId} not found`);
+    if (!product)
+      throw new NotFoundError(`Product with id: ${productId} not found`);
 
-    const existingCartItem = await cartModel.CartModel.findByProductId(userId, productId);
-    if (!existingCartItem) throw new NotFoundError(`Product not found in the cart`);
+    const existingCartItem = await cartModel.CartModel.findByProductId(
+      userId,
+      productId,
+    );
+    if (!existingCartItem)
+      throw new NotFoundError(`Product not found in the cart`);
 
     const existingQuantity = existingCartItem.quantity;
-    const quantityDifference = newQuantity - existingQuantity; // Calculate the change in quantity
+    const quantityDifference = newQuantity - existingQuantity;
 
     if (quantityDifference > 0) {
-      // Need to add more items to the cart
       if (quantityDifference > product.inventoryCount) {
-        throw new NotFoundError(`Not enough stock available. Max available: ${product.inventoryCount}`);
+        throw new NotFoundError(
+          `Not enough stock available. Max available: ${product.inventoryCount}`,
+        );
       }
     }
 
@@ -103,21 +111,62 @@ export async function updateCart(userId: string, productId: number, newQuantity:
       throw new BadRequestError(`Inventory count cannot be less than zero`);
     }
 
-    // Update the cart quantity
-    await cartModel.CartModel.updateCartQuantity(existingCartItem.id, newQuantity);
+    await cartModel.CartModel.updateCartQuantity(
+      existingCartItem.id,
+      newQuantity,
+    );
 
-    // Update the inventory count in the product table
-    await productModel.ProductModel.updateStock(productId, updatedInventoryCount);
+    await productModel.ProductModel.updateStock(
+      productId,
+      updatedInventoryCount,
+    );
 
-    // If inventory reaches zero, update the status to "out of stock"
     if (updatedInventoryCount === 0) {
       await productModel.ProductModel.updateStatus(product.id, false);
     }
 
-    // Return the updated cart after the operation
     const updatedCart = await viewCart(userId);
     return updatedCart;
   } catch (error) {
     throw error;
+  }
+}
+
+export async function deleteCartItem(
+  userId: string,
+  productId: number,
+): Promise<string> {
+  try {
+    const existingCartItem = await cartModel.CartModel.findByProductId(
+      userId,
+      productId,
+    );
+    if (!existingCartItem) {
+      throw new NotFoundError(
+        `Product with id ${productId} not found in the cart`,
+      );
+    }
+
+    const product = await productModel.ProductModel.findById(productId);
+    if (!product) {
+      throw new NotFoundError(`Product with id ${productId} does not exist`);
+    }
+
+    await cartModel.CartModel.deleteCartItem(existingCartItem.id);
+
+    const updatedInventoryCount =
+      product.inventoryCount + existingCartItem.quantity;
+
+    await productModel.ProductModel.updateStock(
+      productId,
+      updatedInventoryCount,
+    );
+
+    return `Product with id ${productId} removed from cart, and inventory updated successfully.`;
+  } catch (error) {
+    throw new ValidationError(
+      `Error deleting product from cart: ${error.message}`,
+      " ",
+    );
   }
 }

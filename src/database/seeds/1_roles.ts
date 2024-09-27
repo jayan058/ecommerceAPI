@@ -1,6 +1,6 @@
-import { Knex } from 'knex';
+import { Knex } from "knex";
 
-const TABLE_NAME = 'roles';
+const TABLE_NAME = "roles";
 
 /**
  * Delete existing entries and seed values for table TABLE_NAME.
@@ -13,8 +13,5 @@ export async function seed(knex: Knex): Promise<void> {
   await knex(TABLE_NAME).del();
 
   // Inserts seed entries
-  await knex(TABLE_NAME).insert([
-    { name: 'Admin' },
-    { name: 'User' }
-  ]);
+  await knex(TABLE_NAME).insert([{ name: "Admin" }, { name: "User" }]);
 }
