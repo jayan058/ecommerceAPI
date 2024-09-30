@@ -79,12 +79,14 @@ export async function viewCart(userId: string) {
     if (userCart.length === 0) {
       throw new NotFoundError("The cart is empty.");
     }
+    
     return userCart.map((item) => ({
       id: item.productId,
       name: item.productName,
       brand: item.productBrand,
       category: item.productCategory,
       quantity: item.quantity,
+      price:item.productPrice
     }));
   } catch (error) {
     throw error;

@@ -37,6 +37,7 @@ export class CartModel extends BaseModel {
         "products.name as productName",
         "products.brand as productBrand",
         "products.category as productCategory",
+        "products.price as productPrice"
       )
       .from("cart")
       .innerJoin("products", "cart.product_id", "products.id")
