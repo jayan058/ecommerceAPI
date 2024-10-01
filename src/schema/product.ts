@@ -65,8 +65,6 @@ export const updateStockSchema = Joi.object({
   }),
 });
 
-
-
 export const productQuerySchema = Joi.object({
   category: Joi.string().optional().messages({
     "string.base": "Category must be a valid string.",
@@ -79,7 +77,8 @@ export const productQuerySchema = Joi.object({
     .pattern(/^\d+(\.\d+)?,\d+(\.\d+)?$/)
     .messages({
       "string.base": "Price range must be a valid string.",
-      "string.pattern.base": "Price range must be in the format 'minPrice,maxPrice' with non-negative numbers.",
+      "string.pattern.base":
+        "Price range must be in the format 'minPrice,maxPrice' with non-negative numbers.",
     }),
   name: Joi.string().optional().messages({
     "string.base": "Name must be a valid string.",
@@ -95,4 +94,3 @@ export const productQuerySchema = Joi.object({
     "number.positive": "Limit must be a positive number.",
   }),
 });
-

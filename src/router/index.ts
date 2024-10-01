@@ -10,6 +10,6 @@ router.use("/user", userRoute);
 router.use("/login", authRoute);
 router.use("/product", productsRoute);
 router.use("/cart", cartRoute);
-router.use("/payment",paymentRouter)
+router.use("/payment", paymentRouter);
 
 export default router;

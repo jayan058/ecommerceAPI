@@ -1,6 +1,6 @@
-// controllers/checkoutController.js
 import * as paymentService from "../services/payment";
 import * as cartService from "../services/cart";
+import * as orderService from "../services/order";
 import { NextFunction } from "express";
 const axios = require("axios");
 
@@ -58,6 +58,7 @@ export async function paymentVerify(req, res, next: NextFunction) {
         total_amount: response.data.total_amount,
         status: response.data.status,
       };
+      orderService.createOrder(userId);
       res.json({ message: "Congrats!!! Payment Successful", paymentResponse });
     }
   } catch (error) {

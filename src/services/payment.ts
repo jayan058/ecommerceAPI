@@ -10,7 +10,8 @@ export async function createPayment(userId, cartItem) {
     if (!cartItem) {
       throw new NotFoundError("Cart is empty");
     }
-    const totalPrice = calculateTotalPrice(cartItem);
+    let totalPrice = calculateTotalPrice(cartItem);
+    totalPrice = Math.round(totalPrice * 100) / 100;
     const signedFieldNames = "total_amount,transaction_uuid,product_code";
     const message = `total_amount=${totalPrice},transaction_uuid=${transactionUUID},product_code=EPAYTEST`;
     const hashedValue = hash(message);

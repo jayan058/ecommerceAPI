@@ -1,40 +1,39 @@
-import { Knex } from 'knex';
+import { Knex } from "knex";
 
-const TABLE_NAME = 'table_name';
-
+const TABLE_NAME = "orders";
 
 /**
- * Create table TABLE_NAME.
+ * Create table orders.
  *
  * @param   {Knex} knex
  * @returns {Promise}
  */
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(TABLE_NAME, (table) => {
-    table.bigIncrements();
-
-    table.timestamp('created_at').notNullable().defaultTo(knex.raw('now()'));
-    
+    table.bigIncrements(); // ID column for the order
     table
-      .bigInteger('created_by')
+      .bigInteger("user_id") // Reference to the user
       .unsigned()
       .notNullable()
-      .references('id')
-      .inTable(TABLE_NAME);
-      
-    table.timestamp('updated_at').nullable();
-    
+      .references("id")
+      .inTable("users") // Assuming you have a users table
+      .onDelete("CASCADE"); // Optional: delete orders if user is deleted
     table
-      .bigInteger('updated_by')
+      .bigInteger("product_id") // Reference to the product
       .unsigned()
-      .references('id')
-      .inTable(TABLE_NAME)
-      .nullable();
+      .notNullable()
+      .references("id")
+      .inTable("products") // Assuming you have a products table
+      .onDelete("CASCADE"); // Optional: remove order if product is deleted
+    table.decimal("total_amount", 14, 2).notNullable(); // Total amount for the order
+    table.integer("quantity").notNullable().defaultTo(1); // Quantity of the product ordered
+    table.timestamp("created_at").notNullable().defaultTo(knex.raw("now()")); // Timestamp for order creation
+    table.timestamp("updated_at").nullable(); // Timestamp for last update
   });
 }
 
 /**
- * Drop table TABLE_NAME.
+ * Drop table orders.
  *
  * @param   {Knex} knex
  * @returns {Promise}

@@ -66,7 +66,7 @@ export class ProductModel extends BaseModel {
     if (filters.category) {
       query.where("category", filters.category);
     }
-    
+
     if (filters.brand) {
       query.where("brand", filters.brand);
     }

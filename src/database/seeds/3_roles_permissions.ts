@@ -36,7 +36,7 @@ export function seed(knex: Knex): Promise<void> {
         },
         {
           permission_id: 6, // Permission ID 6
-          role_id: 1, // User role
+          role_id: 2, // User role
         },
         {
           permission_id: 7, // Permission ID 7
