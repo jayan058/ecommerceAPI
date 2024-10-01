@@ -1,42 +1,66 @@
 // controllers/checkoutController.js
 import * as paymentService from "../services/payment";
-import * as cartService from "../services/cart"
-import https from 'https';
-import * as crypto from "crypto"
-import { DecodedData } from "../interfaces/decodedData";
-import { EsewaResponse } from "../interfaces/esewaResponse";
-  export  async function checkout(req, res) {
-    const userId = req.user.id; 
-    try {
-      const cartItems = await cartService.viewCart(userId);
-      const paymentUrl = await paymentService.createPayment(userId, cartItems);
-      
-      res.render('payment', {
-        amount: paymentUrl.totalPrice,
-        transaction_uuid: paymentUrl.transactionUUID,
-        signature:paymentUrl.hashedValue,
-        success_url:"http://localhost:3000/payment/verify"
+import * as cartService from "../services/cart";
+import { NextFunction } from "express";
+const axios = require("axios");
+
+export async function checkout(req, res, next: NextFunction) {
+  const userId = req.user.id;
+  try {
+    const cartItems = await cartService.viewCart(userId);
+    const paymentUrl = await paymentService.createPayment(userId, cartItems);
+    res.render("payment", {
+      amount: paymentUrl.totalPrice,
+      transaction_uuid: paymentUrl.transactionUUID,
+      signature: paymentUrl.hashedValue,
+      success_url: `http://localhost:3000/payment/verify/${userId}`,
     });
-    } catch (error) {
-      res.status(400).json({ success: false, message: error.message });
-    }
+  } catch (error) {
+    next(error);
   }
+}
 
-  export async function  paymentVerify(req, res) {
-    const { data } = req.query;
-   console.log(data);
-   
-   let decodedData = atob(data);
-   decodedData = await JSON.parse(decodedData);
-   console.log(decodedData);
-   
-    try {
-     
-    } catch (error) {
-      res.status(400).json({ success: false, message: error.message });
+interface DecodedData {
+  transaction_code: string;
+  status: string;
+  total_amount: string;
+  transaction_uuid: string;
+  product_code: string;
+  signed_field_names: string;
+  signature: string;
+}
+
+export async function paymentVerify(req, res, next: NextFunction) {
+  const { data } = req.query;
+  const userId = req.params.userId;
+  try {
+    const decodedDataString = atob(data as string);
+    const decodedData: DecodedData = JSON.parse(decodedDataString);
+    const formattedAmount = decodedData.total_amount
+      .toString()
+      .replace(/,/g, "");
+    let reqOptions = {
+      url: `https://uat.esewa.com.np/api/epay/transaction/status/?product_code=${decodedData.product_code}&total_amount=${formattedAmount}&transaction_uuid=${decodedData.transaction_uuid}`,
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    };
+    let response = await axios.request(reqOptions);
+    console.log(response);
+    if (
+      response.data.status == "COMPLETE" ||
+      response.data.transaction_uuid == decodedData.transaction_uuid ||
+      Number(response.data.total_amount) == Number(decodedData.total_amount)
+    ) {
+      const paymentResponse = {
+        total_amount: response.data.total_amount,
+        status: response.data.status,
+      };
+      res.json({ message: "Congrats!!! Payment Successful", paymentResponse });
     }
+  } catch (error) {
+    next(error);
   }
-
-
-
-  
+}

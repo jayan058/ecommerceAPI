@@ -31,6 +31,7 @@
     "@types/node": "^20.14.10",
     "@types/sinon": "^17.0.3",
     "@types/typescript": "^2.0.0",
+    "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "camelize": "^1.0.1",
     "cookie-parser": "^1.4.6",
