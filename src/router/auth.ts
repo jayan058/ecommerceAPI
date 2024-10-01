@@ -10,4 +10,7 @@ authRoute.post(
   validateBody(userSchema.loginUserSchema),
   authController.login,
 );
+
+authRoute.post("/token", authController.handleTokenRefresh);
+
 export default authRoute;

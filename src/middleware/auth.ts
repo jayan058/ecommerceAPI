@@ -3,7 +3,6 @@ import { verify, TokenExpiredError } from "jsonwebtoken";
 import config from "../config";
 import UnauthorizedError from "../error/unauthorizedError";
 import ForbiddenError from "../error/forbiddenError";
-import { log } from "console";
 export interface AuthenticatedRequest extends Request {
   user?: { id: string; name: string; email: string; permissions: string[] };
 }
