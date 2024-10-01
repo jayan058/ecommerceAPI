@@ -48,7 +48,6 @@ export async function paymentVerify(req, res, next: NextFunction) {
       },
     };
     let response = await axios.request(reqOptions);
-    console.log(response);
     if (
       response.data.status == "COMPLETE" ||
       response.data.transaction_uuid == decodedData.transaction_uuid ||

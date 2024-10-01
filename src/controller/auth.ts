@@ -26,7 +26,6 @@ export async function handleTokenRefresh(
   try {
     authServices.isRefreshTokenValid(token);
     const user = (await authServices.verifyRefreshToken(token)) as User;
-    console.log(user);
     const accessToken = authServices.generateAccessToken({
       id: user.id,
       name: user.name,

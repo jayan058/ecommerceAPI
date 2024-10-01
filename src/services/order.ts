@@ -3,7 +3,6 @@ import * as orderModel from "../models/order";
 
 export async function createOrder(userId) {
   const userCart = await cartModel.CartModel.findByUserId(userId);
-  console.log(userCart);
 
   try {
     const orders = userCart.map((item) => {
@@ -20,7 +19,6 @@ export async function createOrder(userId) {
         updated_at: new Date(),
       };
     });
-    console.log(orders);
     orderModel.OrderModel.addOrder(orders);
   } catch (error) {
     throw error;
