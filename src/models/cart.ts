@@ -51,4 +51,10 @@ export class CartModel extends BaseModel {
       .where("id", cartItemId)
       .delete();
   }
+  static async deleteAllByUserId(userId: string) {
+    return await this.queryBuilder()
+      .from("cart")
+      .where("user_id", userId)
+      .delete();
+  }
 }

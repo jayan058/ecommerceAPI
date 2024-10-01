@@ -3,7 +3,6 @@ import * as orderModel from "../models/order";
 
 export async function createOrder(userId) {
   const userCart = await cartModel.CartModel.findByUserId(userId);
-
   try {
     const orders = userCart.map((item) => {
       const quantity = item.quantity;
@@ -19,7 +18,8 @@ export async function createOrder(userId) {
         updated_at: new Date(),
       };
     });
-    orderModel.OrderModel.addOrder(orders);
+    await orderModel.OrderModel.addOrder(orders);
+    await cartModel.CartModel.deleteAllByUserId(userId)
   } catch (error) {
     throw error;
   }
