@@ -8,5 +8,5 @@ paymentRouter.post(
   authorize(["checkout"]),
   paymentController.checkout,
 );
-paymentRouter.get("/verify/:userId", paymentController.paymentVerify);
+paymentRouter.get("/success/:userId", paymentController.paymentSuccess);
 export default paymentRouter;

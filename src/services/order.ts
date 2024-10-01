@@ -1,3 +1,4 @@
+import NotFoundError from "../error/notFoundError";
 import * as cartModel from "../models/cart";
 import * as orderModel from "../models/order";
 
@@ -19,8 +20,23 @@ export async function createOrder(userId) {
       };
     });
     await orderModel.OrderModel.addOrder(orders);
-    await cartModel.CartModel.deleteAllByUserId(userId)
+    await cartModel.CartModel.deleteAllByUserId(userId);
   } catch (error) {
     throw error;
   }
+}
+
+
+export async function getAllOrders(page:number,limit:number){
+  try{
+  let orderData = await orderModel.OrderModel.getAllOrders(page, limit);
+  if(!orderData){
+    throw new NotFoundError ("No orders to show")
+  }
+  return orderData
+}
+catch(error){
+  throw(error)
+}
+
 }

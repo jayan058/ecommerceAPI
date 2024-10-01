@@ -4,7 +4,7 @@ import * as productService from "../services/product";
 export async function addProduct(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   try {
     const productData = req.body;
@@ -18,7 +18,7 @@ export async function addProduct(
 export async function updatePrice(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const productId = Number(req.params.productId);
   const { newPrice } = req.body;
@@ -26,7 +26,7 @@ export async function updatePrice(
   try {
     const updatedProduct = await productService.updateProductPrice(
       productId,
-      newPrice,
+      newPrice
     );
     res.json(updatedProduct);
   } catch (error) {
@@ -37,7 +37,7 @@ export async function updatePrice(
 export async function updateStock(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   const productId = Number(req.params.productId);
   const { newStock } = req.body;
@@ -45,7 +45,7 @@ export async function updateStock(
   try {
     const updatedProduct = await productService.updateProductStock(
       productId,
-      newStock,
+      newStock
     );
     res.json(updatedProduct);
   } catch (error) {
@@ -56,7 +56,7 @@ export async function updateStock(
 export async function getProducts(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) {
   try {
     const {
@@ -75,8 +75,18 @@ export async function getProducts(
       page: Number(page),
       limit: Number(limit),
     };
-    const products = await productService.getFilteredProducts(filteredParams);
-    return res.status(200).json(products);
+    const { products, totalCount } =
+      await productService.getFilteredProducts(filteredParams);
+    const totalPages = Math.ceil(totalCount / filteredParams.limit);
+    return res.status(200).json({
+      products,
+      pagination: {
+        totalCount,
+        totalPages,
+        currentPage: filteredParams.page,
+        limit: filteredParams.limit,
+      },
+    });
   } catch (error) {
     next(error);
   }

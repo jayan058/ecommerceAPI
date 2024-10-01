@@ -59,5 +59,9 @@ export async function getFilteredProducts(filters: {
   limit: number;
 }) {
   const products = await productModel.ProductModel.findWithFilters(filters);
-  return products;
+  
+  // Get total count of products matching the filters
+  const totalCount = await productModel.ProductModel.countFilteredProducts(filters);
+
+  return { products, totalCount };
 }

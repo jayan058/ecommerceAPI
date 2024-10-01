@@ -179,5 +179,4 @@ export async function deleteCartItem(
       " ",
     );
   }
- 
 }

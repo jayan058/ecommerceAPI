@@ -57,7 +57,6 @@ export function verifyRefreshToken(token: string) {
   });
 }
 export function isRefreshTokenValid(token: string) {
-
   if (!refreshTokens.includes(token)) {
     throw new ForbiddenError("Invalid refresh token");
   }
