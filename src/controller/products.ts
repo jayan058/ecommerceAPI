@@ -9,7 +9,10 @@ export async function addProduct(
   try {
     const productData = req.body;
     const newProduct = await productService.addProduct(productData);
-    res.json(newProduct);
+    res.json({
+      success:true,
+      message:"Product added successfully",
+      newProduct});
   } catch (error) {
     next(error);
   }
@@ -28,7 +31,11 @@ export async function updatePrice(
       productId,
       newPrice
     );
-    res.json(updatedProduct);
+    res.json({
+      success:true,
+      message:"Price updated successfully",
+      updatedProduct}
+      );
   } catch (error) {
     next(error);
   }
@@ -47,7 +54,10 @@ export async function updateStock(
       productId,
       newStock
     );
-    res.json(updatedProduct);
+    res.json({
+      success:true,
+      message:"Price updated successfully",
+      updatedProduct});
   } catch (error) {
     next(error);
   }
