@@ -3,6 +3,7 @@ import * as cartController from "../controller/cart";
 import { authenticate, authorize } from "../middleware/auth";
 import * as cartSchema from "../schema/cart";
 import { validateBody, validateParams } from "../middleware/validation";
+import * as productSchema from "../schema/product";
 const cartRoute = express.Router();
 cartRoute.post(
   "/",
@@ -20,6 +21,7 @@ cartRoute.get(
 cartRoute.put(
   "/:productId",
   validateBody(cartSchema.updateCartSchema),
+  validateParams(productSchema.updatePriceQuerySchema),
   authenticate,
   authorize(["view_cart"]),
   cartController.updateCart,

@@ -56,7 +56,7 @@ export async function updateStock(
     );
     res.json({
       success:true,
-      message:"Price updated successfully",
+      message:"Product stock updated successfully",
       updatedProduct});
   } catch (error) {
     next(error);

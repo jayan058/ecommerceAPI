@@ -55,6 +55,14 @@ export const updatePriceSchema = Joi.object({
     "any.required": "New price is required.",
   }),
 });
+export const updatePriceQuerySchema = Joi.object({
+productId: Joi.number().integer().positive().required().messages({
+  "number.base": "Product id must be a valid number.",
+  "number.integer": "Product id must be an integer.",
+  "number.positive": "Product id must be a positive number.",
+}),
+})
+
 
 export const updateStockSchema = Joi.object({
   newStock: Joi.number().integer().min(0).required().messages({

@@ -26,7 +26,7 @@ export async function updateProductPrice(productId: number, newPrice: number) {
     await productModel.ProductModel.updatePrice(productId, newPrice);
     return { ...productExists, price: newPrice };
   } catch (error) {
-    throw new ValidationError("Error updating the product price", " ");
+   throw(error)
   }
 }
 
@@ -46,7 +46,7 @@ export async function updateProductStock(productId: number, newStock: number) {
 
     return updatedProduct;
   } catch (error) {
-    throw new ValidationError("Error updating the product stock", " ");
+    throw (error)
   }
 }
 

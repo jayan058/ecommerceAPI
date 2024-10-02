@@ -1,6 +1,6 @@
 import express from "express";
 import * as productController from "../controller/products";
-import { validateBody, validateQuery } from "../middleware/validation";
+import { validateBody, validateQuery,validateParams } from "../middleware/validation";
 import * as productSchema from "../schema/product";
 import { authorize, authenticate } from "../middleware/auth";
 
@@ -16,6 +16,7 @@ productsRoute.post(
 productsRoute.put(
   "/:productId/update-price",
   validateBody(productSchema.updatePriceSchema),
+  validateParams(productSchema.updatePriceQuerySchema),
   authenticate,
   authorize(["set_prices"]),
   productController.updatePrice,
@@ -24,6 +25,7 @@ productsRoute.put(
 productsRoute.put(
   "/:productId/update-stock",
   validateBody(productSchema.updateStockSchema),
+  validateParams(productSchema.updatePriceQuerySchema),
   authenticate,
   authorize(["manage_inventory"]),
   productController.updateStock,
