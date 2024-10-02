@@ -161,8 +161,8 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response**:
     ```json
     {
-     "accessToken":    your_access_token,
-      "refreshToken":  your_refresh_token
+     "accessToken":"your_access_token",
+      "refreshToken":"your_refresh_token"
     }
     ```
   - **Response (If wrong password)**:
