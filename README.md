@@ -231,8 +231,8 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
     ```json
     {
     "status": "error",
-     "statusCode": 400,
-     "message": "Price range must be in the format 'minPrice,maxPrice' with non-negative 
+    "statusCode": 400,
+    "message": "Price range must be in the format minPrice,maxPrice with non-negative 
       numbers."
     }
     ```
