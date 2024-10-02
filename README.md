@@ -227,13 +227,12 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
      }
     }
     ```
-  - **Response (If negative price range is provided)**:
+   - **Response (If negative price range is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Price range must be in the format minPrice,maxPrice with non-negative 
-      numbers."
+     "status": "error",
+     "statusCode": 400,
+     "message": "Price range must be in the format with non-negative numbers."
     }
     ```
   - **Response (If negative limit or page is provided)**:
