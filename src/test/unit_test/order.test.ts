@@ -5,7 +5,7 @@ import * as orderService from "../../services/order";
 import NotFoundError from "../../error/notFoundError";
 
 describe("Order Service", () => {
-  const userId = "1";  
+  const userId = "1";
   const mockCartItems = [
     {
       productId: "101",
@@ -20,20 +20,22 @@ describe("Order Service", () => {
   ];
 
   afterEach(() => {
-    sinon.restore(); 
+    sinon.restore();
   });
 
   describe("createOrder", () => {
     it("should create orders and clear the cart", async () => {
       sinon.stub(cartModel.CartModel, "findByUserId").resolves(mockCartItems);
-      sinon.stub(orderModel.OrderModel, "addOrder").resolves(); 
+      sinon.stub(orderModel.OrderModel, "addOrder").resolves();
       sinon.stub(cartModel.CartModel, "deleteAllByUserId").resolves();
 
       await orderService.createOrder(userId);
 
-      const findByUserIdStub = cartModel.CartModel.findByUserId as sinon.SinonStub;
+      const findByUserIdStub = cartModel.CartModel
+        .findByUserId as sinon.SinonStub;
       const addOrderStub = orderModel.OrderModel.addOrder as sinon.SinonStub;
-      const deleteAllByUserIdStub = cartModel.CartModel.deleteAllByUserId as sinon.SinonStub;
+      const deleteAllByUserIdStub = cartModel.CartModel
+        .deleteAllByUserId as sinon.SinonStub;
 
       if (!findByUserIdStub.calledOnce) {
         throw new Error("findByUserId was not called once");
@@ -48,14 +50,18 @@ describe("Order Service", () => {
 
     it("should throw error if addOrder fails", async () => {
       sinon.stub(cartModel.CartModel, "findByUserId").resolves(mockCartItems);
-      sinon.stub(orderModel.OrderModel, "addOrder").rejects(new Error("Database error")); 
-      sinon.stub(cartModel.CartModel, "deleteAllByUserId").resolves(); 
+      sinon
+        .stub(orderModel.OrderModel, "addOrder")
+        .rejects(new Error("Database error"));
+      sinon.stub(cartModel.CartModel, "deleteAllByUserId").resolves();
       try {
         await orderService.createOrder(userId);
         throw new Error("Expected error was not thrown");
       } catch (error) {
         if (error.message !== "Database error") {
-          throw new Error(`Expected error message to be "Database error", but got "${error.message}"`);
+          throw new Error(
+            `Expected error message to be "Database error", but got "${error.message}"`,
+          );
         }
       }
     });
@@ -65,8 +71,8 @@ describe("Order Service", () => {
     it("should return all orders if available", async () => {
       const mockOrders = {
         orders: [
-          { id: 1, user_id: userId, total_amount: 30.00 },
-          { id: 2, user_id: userId, total_amount: 20.00 },
+          { id: 1, user_id: userId, total_amount: 30.0 },
+          { id: 2, user_id: userId, total_amount: 20.0 },
         ],
         count: 2,
       };
@@ -76,7 +82,8 @@ describe("Order Service", () => {
       if (result.orders.length !== 2) {
         throw new Error(`Expected 2 orders, but got ${result.orders.length}`);
       }
-      const getAllOrdersStub = orderModel.OrderModel.getAllOrders as sinon.SinonStub;
+      const getAllOrdersStub = orderModel.OrderModel
+        .getAllOrders as sinon.SinonStub;
       if (!getAllOrdersStub.calledOnce) {
         throw new Error("getAllOrders was not called once");
       }
@@ -84,11 +91,10 @@ describe("Order Service", () => {
 
     it("should throw NotFoundError if no orders exist", async () => {
       const mockOrders = {
-        orders: [], 
-        count: 0,  
+        orders: [],
+        count: 0,
       };
-      
-     
+
       sinon.stub(orderModel.OrderModel, "getAllOrders").resolves(mockOrders);
 
       try {
@@ -96,23 +102,31 @@ describe("Order Service", () => {
         throw new Error("Expected NotFoundError was not thrown");
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
-          throw new Error(`Expected NotFoundError, but got ${error.constructor.name}`);
+          throw new Error(
+            `Expected NotFoundError, but got ${error.constructor.name}`,
+          );
         }
         if (error.message !== "No orders to show") {
-          throw new Error(`Expected error message to be "No orders to show", but got "${error.message}"`);
+          throw new Error(
+            `Expected error message to be "No orders to show", but got "${error.message}"`,
+          );
         }
       }
     });
 
     it("should handle errors thrown from getAllOrders", async () => {
-      sinon.stub(orderModel.OrderModel, "getAllOrders").rejects(new Error("Database error")); 
+      sinon
+        .stub(orderModel.OrderModel, "getAllOrders")
+        .rejects(new Error("Database error"));
 
       try {
         await orderService.getAllOrders(1, 10);
         throw new Error("Expected error was not thrown");
       } catch (error) {
         if (error.message !== "Database error") {
-          throw new Error(`Expected error message to be "Database error", but got "${error.message}"`);
+          throw new Error(
+            `Expected error message to be "Database error", but got "${error.message}"`,
+          );
         }
       }
     });

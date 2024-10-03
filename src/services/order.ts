@@ -29,7 +29,7 @@ export async function createOrder(userId) {
 export async function getAllOrders(page: number, limit: number) {
   try {
     let orderData = await orderModel.OrderModel.getAllOrders(page, limit);
-    if (orderData.orders.length==0) {
+    if (orderData.orders.length == 0) {
       throw new NotFoundError("No orders to show");
     }
     return orderData;

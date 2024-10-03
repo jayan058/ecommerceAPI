@@ -264,6 +264,7 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 
 - **POST /products**  
   Add a new product. (Admin only)
+
   - **Request Body**:
     ```json
     {
@@ -299,9 +300,11 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
       "message": "Inventory count is required."
     }
     ```
+
   ```
 
   ```
+
 - **Authorization**: **Admin only**
 
 ---
@@ -422,6 +425,7 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 
 - **GET /cart**  
   View items in the cart. No request body required.
+
   - **Response**:
     ```json
     [
