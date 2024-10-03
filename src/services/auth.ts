@@ -10,7 +10,7 @@ import config from "../config";
 import ForbiddenError from "../error/forbiddenError";
 import { StatusCodes } from "http-status-codes";
 
-let refreshTokens: string[] = [];
+export let refreshTokens: string[] = [];
 export async function login(email: string, password: string, res: Response) {
   const userExists = await userModels.UserModel.findByEmail(email);
   if (userExists.length == 0) {

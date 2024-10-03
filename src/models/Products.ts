@@ -62,32 +62,32 @@ export class ProductModel extends BaseModel {
     limit: number;
   }) {
     const query = this.queryBuilder().select("*").from("products");
-    
+
     if (filters.category) {
       query.where("category", filters.category);
     }
-  
+
     if (filters.brand) {
       query.where("brand", filters.brand);
     }
-    
+
     if (filters.priceRange) {
       const [minPrice, maxPrice] = filters.priceRange.split(",");
       query.whereBetween("price", [Number(minPrice), Number(maxPrice)]);
     }
-    
+
     if (filters.name) {
       query.where("name", "ilike", `%${filters.name}%`);
     }
-    
+
     const offset = (filters.page - 1) * filters.limit;
     query.limit(filters.limit).offset(offset);
     query.orderBy("id", "asc");
-    
+
     const products = await query;
     return products;
   }
-  
+
   // New method to count filtered products
   static async countFilteredProducts(filters: {
     category?: string;
@@ -96,31 +96,30 @@ export class ProductModel extends BaseModel {
     name?: string;
   }) {
     const query = this.queryBuilder().count("* as count").from("products");
-  
+
     if (filters.category) {
       query.where("category", filters.category);
     }
-  
+
     if (filters.brand) {
       query.where("brand", filters.brand);
     }
-    
+
     if (filters.priceRange) {
       const [minPrice, maxPrice] = filters.priceRange.split(",");
       query.whereBetween("price", [Number(minPrice), Number(maxPrice)]);
     }
-    
+
     if (filters.name) {
       query.where("name", "ilike", `%${filters.name}%`);
     }
-  
+
     // Execute the query
     const result = await query;
-  
+
     // Type assertion
     const [{ count }] = result as Array<{ count: number }>;
-  
+
     return count;
   }
-
 }

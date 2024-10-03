@@ -1,6 +1,10 @@
 import express from "express";
 import * as productController from "../controller/products";
-import { validateBody, validateQuery,validateParams } from "../middleware/validation";
+import {
+  validateBody,
+  validateQuery,
+  validateParams,
+} from "../middleware/validation";
 import * as productSchema from "../schema/product";
 import { authorize, authenticate } from "../middleware/auth";
 

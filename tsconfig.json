@@ -2,8 +2,7 @@
   "compilerOptions": {
     "target": "ES2016",
     "module": "CommonJS",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "include": ["src/**/*.ts", "src/test/**/*.ts"]
-
 }

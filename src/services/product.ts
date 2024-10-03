@@ -26,7 +26,7 @@ export async function updateProductPrice(productId: number, newPrice: number) {
     await productModel.ProductModel.updatePrice(productId, newPrice);
     return { ...productExists, price: newPrice };
   } catch (error) {
-   throw(error)
+    throw error;
   }
 }
 
@@ -46,7 +46,7 @@ export async function updateProductStock(productId: number, newStock: number) {
 
     return updatedProduct;
   } catch (error) {
-    throw (error)
+    throw error;
   }
 }
 
@@ -59,9 +59,10 @@ export async function getFilteredProducts(filters: {
   limit: number;
 }) {
   const products = await productModel.ProductModel.findWithFilters(filters);
-  
+
   // Get total count of products matching the filters
-  const totalCount = await productModel.ProductModel.countFilteredProducts(filters);
+  const totalCount =
+    await productModel.ProductModel.countFilteredProducts(filters);
 
   return { products, totalCount };
 }

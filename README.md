@@ -120,7 +120,8 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 ### Authentication
 
 - **POST /user**  
-  Register a new user.  
+  Register a new user.
+
   - **Request Body**:
     ```json
     {
@@ -132,72 +133,79 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response**:
     ```json
     {
-     "name": "John Doe",
-     "email": "johndoe@example.com",
-     "password": "$2b$10$SfR37id3roGZdMMWcOqwYuJ3ZxDWvdsSrAixqhnVzc3FKOt2Lunf2"
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "password": "$2b$10$SfR37id3roGZdMMWcOqwYuJ3ZxDWvdsSrAixqhnVzc3FKOt2Lunf2"
     }
+    ```
   - **Response (If email already taken)**:
+
     ```json
     {
       "status": "error",
       "statusCode": 409,
       "message": "Email already taken"
-     }
-
+    }
     ```
+
   - **Authorization**: Public (No authentication required)
 
 ---
 
 - **POST /login**  
-  Login to get a JWT token.  
+  Login to get a JWT token.
+
   - **Request Body**:
     ```json
     {
-       "email": "johndoe@example.com",
-      "password": "yourpassword"    
-     }
+      "email": "johndoe@example.com",
+      "password": "yourpassword"
+    }
     ```
   - **Response**:
     ```json
     {
-     "accessToken":"your_access_token",
-      "refreshToken":"your_refresh_token"
+      "accessToken": "your_access_token",
+      "refreshToken": "your_refresh_token"
     }
     ```
   - **Response (If wrong password)**:
     ```json
     {
-     "status": "error",
-     "statusCode": 401,
-     "message": "Passwords Don't Match"
-     }
+      "status": "error",
+      "statusCode": 401,
+      "message": "Passwords Don't Match"
+    }
     ```
   - **Response (If invalid email format is provided)**:
-     ```json
+    ```json
     {
-     "status": "error",
-     "statusCode": 400,
-     "message": "Please provide a valid email address."
-     }
+      "status": "error",
+      "statusCode": 400,
+      "message": "Please provide a valid email address."
+    }
     ```
-   - **Response (If wrong email)**:
-      ```json
-     {
-     "status": "error",
-     "statusCode": 404,
-     "message": "No Matching Email"
-     }
+  - **Response (If wrong email)**:
+    ```json
+    {
+      "status": "error",
+      "statusCode": 404,
+      "message": "No Matching Email"
+    }
+    ```
 
-    ```
- - **Authorization**: Public (No authentication required)
+  ```
+
+  ```
+
+- **Authorization**: Public (No authentication required)
 
 ---
 
 ### Product Management
 
 - **GET /products**  
-  Get a list of all products. Supports filters using query parameters such as `name`, `brand`, `priceRange`, `category`, `page`, and `limit`.  
+  Get a list of all products. Supports filters using query parameters such as `name`, `brand`, `priceRange`, `category`, `page`, and `limit`.
   - **Example Request**:
     ```
     GET http://localhost:3000/product?name=Sample%20Product&brand=Sample%20Brand&priceRange=0,100&category=Sample%20Category&page=3&limit=1
@@ -205,111 +213,114 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response**:
     ```json
     {
-    "products": [
-    {
-      "id": "3",
-      "name": "Sample Product",
-      "brand": "Sample Brand",
-      "category": "Sample Category",
-      "price": "69.99",
-      "inventoryCount": 81,
-      "description": "This is a sample product description.",
-      "isActive": true,
-      "createdAt": "2024-10-01T11:15:57.697Z",
-      "updatedAt": "2024-10-02T03:32:36.604Z"
-    }
-    ],
-    "pagination": {
-    "totalCount": "6",
-    "totalPages": 6,
-    "currentPage": 3,
-    "limit": 1
-     }
-    }
-    ```
-   - **Response (If negative price range is provided)**:
-    ```json
-    {
-     "status": "error",
-     "statusCode": 400,
-     "message": "Price range must be in the format with non-negative numbers."
+      "products": [
+        {
+          "id": "3",
+          "name": "Sample Product",
+          "brand": "Sample Brand",
+          "category": "Sample Category",
+          "price": "69.99",
+          "inventoryCount": 81,
+          "description": "This is a sample product description.",
+          "isActive": true,
+          "createdAt": "2024-10-01T11:15:57.697Z",
+          "updatedAt": "2024-10-02T03:32:36.604Z"
+        }
+      ],
+      "pagination": {
+        "totalCount": "6",
+        "totalPages": 6,
+        "currentPage": 3,
+        "limit": 1
+      }
     }
     ```
+  - **Response (If negative price range is provided)**:
+  ```json
+  {
+    "status": "error",
+    "statusCode": 400,
+    "message": "Price range must be in the format with non-negative numbers."
+  }
+  ```
   - **Response (If negative limit or page is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Page must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Page must be a positive number."
     }
     ```
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Limit must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Limit must be a positive number."
     }
     ```
-    
   - **Authorization**: User only (**Admin is forbidden**)
 
 ---
 
 - **POST /products**  
-  Add a new product. (Admin only)  
+  Add a new product. (Admin only)
   - **Request Body**:
     ```json
     {
-     "name": "Sample Product",
-     "brand": "Sample Brand",
-     "category": "Sample Category",
-     "price": 69.99,
-     "inventory_count": "90",
-     "description": "This is a sample product description."
-     }
+      "name": "Sample Product",
+      "brand": "Sample Brand",
+      "category": "Sample Category",
+      "price": 69.99,
+      "inventory_count": "90",
+      "description": "This is a sample product description."
+    }
     ```
   - **Response**:
     ```json
     {
-     "success": true,
-     "message": "Product added successfully",
-     "newProduct": {
-         "name": "Sample Product",
-         "brand": "Sample Brand",
-         "category": "Sample Category",
-         "price": 69.99,
-         "inventory_count": "90",
-         "description": "This is a sample product description.",
-         "created_at": "2024-10-02T10:10:36.723Z"
-     }
+      "success": true,
+      "message": "Product added successfully",
+      "newProduct": {
+        "name": "Sample Product",
+        "brand": "Sample Brand",
+        "category": "Sample Category",
+        "price": 69.99,
+        "inventory_count": "90",
+        "description": "This is a sample product description.",
+        "created_at": "2024-10-02T10:10:36.723Z"
+      }
     }
     ```
-   - **Response (If any field other than description is missing)**:
-     ```json
-     {
-        "status": "error",
-        "statusCode": 400,
-        "message": "Inventory count is required."
-      }
+  - **Response (If any field other than description is missing)**:
+    ```json
+    {
+      "status": "error",
+      "statusCode": 400,
+      "message": "Inventory count is required."
+    }
     ```
- - **Authorization**: **Admin only**
+  ```
+
+  ```
+- **Authorization**: **Admin only**
 
 ---
 
 - **PUT product/:id/update-price**  
   Update a product price
+
   - **Request Body**:
     ```json
     {
-    "newPrice": 2
+      "newPrice": 2
     }
     ```
   - **Response**:
     ```json
     {
-     "success": true,
-     "message": "Price updated successfully",
-     "updatedProduct": {
+      "success": true,
+      "message": "Price updated successfully",
+      "updatedProduct": {
         "id": "5",
         "name": "Sample Product",
         "brand": "Sample Brand",
@@ -320,14 +331,13 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
         "isActive": true,
         "createdAt": "2024-10-01T11:15:58.004Z",
         "updatedAt": "2024-10-01T11:15:58.005Z"
-     }
+      }
     }
     ```
- 
   - **Response (If product with the given id is not found)**:
     ```json
     {
-       "status": "error",
+      "status": "error",
       "statusCode": 404,
       "message": "Product with ID 900 not found"
     }
@@ -335,38 +345,39 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response (If invalid product id is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Product id must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Product id must be a positive number."
     }
     ```
   - **Response (If incomplete input is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "New price is required."
+      "status": "error",
+      "statusCode": 400,
+      "message": "New price is required."
     }
     ```
+
 - **Authorization**: **Admin only**
+
 ---
-
-
 
 - **PUT product/:id/update-stock**  
   Update a product price
+
   - **Request Body**:
     ```json
     {
-    "newStock": 2
+      "newStock": 2
     }
     ```
   - **Response**:
     ```json
     {
-     "success": true,
-     "message": "Product stock updated successfully",
-     "updatedProduct": {
+      "success": true,
+      "message": "Product stock updated successfully",
+      "updatedProduct": {
         "id": "5",
         "name": "Sample Product",
         "brand": "Sample Brand",
@@ -377,14 +388,13 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
         "isActive": false,
         "createdAt": "2024-10-01T11:15:58.004Z",
         "updatedAt": "2024-10-01T11:15:58.005Z"
-     }
+      }
     }
     ```
- 
   - **Response (If product with the given id is not found)**:
     ```json
     {
-       "status": "error",
+      "status": "error",
       "statusCode": 404,
       "message": "Product with ID 900 not found"
     }
@@ -392,53 +402,56 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response (If invalid product id is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Product id must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Product id must be a positive number."
     }
     ```
   - **Response (If incomplete input is provided)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "New stock count is required."
+      "status": "error",
+      "statusCode": 400,
+      "message": "New stock count is required."
     }
     ```
+
 - **Authorization**: **Admin only**
+
 ---
 
 - **GET /cart**  
-  View items in the cart. No request body required.  
+  View items in the cart. No request body required.
   - **Response**:
     ```json
     [
-     { 
-    "id": "3",
-    "name": "Sample Product",
-    "brand": "Sample Brand",
-    "category": "Sample Category",
-    "quantity": 9,
-    "price": "69.99"
-     } 
+      {
+        "id": "3",
+        "name": "Sample Product",
+        "brand": "Sample Brand",
+        "category": "Sample Category",
+        "quantity": 9,
+        "price": "69.99"
+      }
     ]
     ```
   - **Response (If the cart is empty)**:
+
     ```json
-    
-    { 
-    "status": "error",
-    "statusCode": 404,
-    "message": "The cart is empty."
-    } 
-    
+    {
+      "status": "error",
+      "statusCode": 404,
+      "message": "The cart is empty."
+    }
     ```
+
   - **Authorization**: **User Only (Not Admin)**
 
 ---
 
 - **DELETE /cart/:productId**  
-  Remove a product from the cart.  
+  Remove a product from the cart.
+
   - **Example Request**:
     ```
     DELETE http://localhost:3000/cart/3
@@ -446,16 +459,17 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
   - **Response**:
     ```json
     {
-     "success": true,
-     "message": "Product removed from cart successfully."
+      "success": true,
+      "message": "Product removed from cart successfully."
     }
     ```
   - **Response (If the product with the given id does not exist in the cart)**:
+
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Error deleting product from cart: Product with id 3 not found in the cart"
+      "status": "error",
+      "statusCode": 400,
+      "message": "Error deleting product from cart: Product with id 3 not found in the cart"
     }
     ```
 
@@ -463,50 +477,51 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 
 ---
 
-
 - **POST /cart/**  
-  Add product to cart  
+  Add product to cart
+
   - **Request-Body**:
     ```json
     {
-     "productId":3,
-     "quantity":9
+      "productId": 3,
+      "quantity": 9
     }
     ```
   - **Response**:
     ```json
     [
       {
-    "id": "3",
-    "name": "Sample Product",
-    "brand": "Sample Brand",
-    "category": "Sample Category",
-    "quantity": 9
+        "id": "3",
+        "name": "Sample Product",
+        "brand": "Sample Brand",
+        "category": "Sample Category",
+        "quantity": 9
       }
     ]
     ```
   - **Response (If the desired amount is not avaiable in the inventory)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Your desired quantity exceeds our available stock"
+      "status": "error",
+      "statusCode": 400,
+      "message": "Your desired quantity exceeds our available stock"
     }
     ```
   - **Response (If the provided productId is wrong)**:
     ```json
     {
-    "status": "error",
-    "statusCode": 404,
-    "message": "Product with id:99 not found"
+      "status": "error",
+      "statusCode": 404,
+      "message": "Product with id:99 not found"
     }
     ```
   - **Response (If the provided productId is invalid)**:
+
     ```json
     {
-    "status": "error",
-    "statusCode": 400,
-    "message": "Product ID must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Product ID must be a positive number."
     }
     ```
 
@@ -515,88 +530,90 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 ---
 
 - **PUT /cart/:productId**  
- Update the product quantity in the cart 
+  Update the product quantity in the cart
+
   - **Request-Body**:
     ```json
     {
-     "quantity":10
-     }
+      "quantity": 10
+    }
     ```
   - **Response**:
+
     ```json
     [
-     {
-    "id": "3",
-    "name": "Sample Product",
-    "brand": "Sample Brand",
-    "category": "Sample Category",
-    "quantity": 10,
-    "price": "69.99"
-     }
+      {
+        "id": "3",
+        "name": "Sample Product",
+        "brand": "Sample Brand",
+        "category": "Sample Category",
+        "quantity": 10,
+        "price": "69.99"
+      }
     ]
     ```
 
   - **Response (If the provided productId is not present in the cart)**:
     ```json
     {
-     "status": "error",
-     "statusCode": 404,
-     "message": "Product with id:99 not found"
+      "status": "error",
+      "statusCode": 404,
+      "message": "Product with id:99 not found"
     }
     ```
   - **Response (If the provided quantity is negative)**:
     ```json
     {
-     "status": "error",
-     "statusCode": 400,
-     "message": "Quantity cannot be negative. Use zero (0) to remove the item from the cart."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Quantity cannot be negative. Use zero (0) to remove the item from the cart."
     }
     ```
   - **Response (If the provided productId is invalid)**:
+
     ```json
     {
-     "status": "error",
-     "statusCode": 400,
-     "message": "Product id must be a positive number."
+      "status": "error",
+      "statusCode": 400,
+      "message": "Product id must be a positive number."
     }
     ```
 
   - **Authorization**: **User Only (Not Admin)**
 
 ---
+
 ### Order and Payment
 
 - **POST payment/checkout**  
-  Checkout the cart and initiate payment using eSewa.  
- - **Authorization**: User
+  Checkout the cart and initiate payment using eSewa.
+- **Authorization**: User
 
 ---
 
 - **POST /payment/success/:userId (Redirected to this URL if the payment is successful)**  
-  Verify eSewa payment status. 
+  Verify eSewa payment status.
 - **Response**: Esewa sends this response if the payment is successful.
- ``` 
+
+```
 eyJ0cmFuc2FjdGlvbl9jb2RlIjoiMExENUNFSCIsInN0YXR1cyI6IkNPTVBMRVRFIiwidG90YWxfYW1vdW50IjoiMSwwMDAuMCIsInRyYW5zYWN0aW9uX3V1aWQiOiIyNDA2MTMtMTM0MjMxIiwicHJvZHVjdF9jb2RlIjoiTlAtRVMtQUJISVNIRUstRVBBWSIsInNpZ25lZF9maWVsZF9uYW1lcyI6InRyYW5zYWN0aW9uX2NvZGUsc3RhdHVzLHRvdGFsX2Ftb3VudCx0cmFuc2FjdGlvbl91dWlkLHByb2R1Y3RfY29kZSxzaWduZWRfZmllbGRfbmFtZXMiLCJzaWduYXR1cmUiOiJNcHd5MFRGbEhxcEpqRlVER2ljKzIybWRvZW5JVFQrQ2N6MUxDNjFxTUFjPSJ9
 ```
+
 - **Response (Decode the above Base64 response to obatin the following)**:
-    ```json
-    {
-  "transaction_code": "0LD5CEH",
-  "status": "COMPLETE",
-  "total_amount": "1,000.0",
-  "transaction_uuid": "240613-134231",
-  "product_code": "NP-ES-ABHISHEK-EPAY",
-  "signed_field_names": 
-   "transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names",
-  "signature": "Mpwy0TFlHqpJjFUDGic+22mdoenITT+Ccz1LC61qMAc="
-   } 
-    ```
-   
- - **Authorization**: None
+  ```json
+  {
+    "transaction_code": "0LD5CEH",
+    "status": "COMPLETE",
+    "total_amount": "1,000.0",
+    "transaction_uuid": "240613-134231",
+    "product_code": "NP-ES-ABHISHEK-EPAY",
+    "signed_field_names": "transaction_code,status,total_amount,transaction_uuid,product_code,signed_field_names",
+    "signature": "Mpwy0TFlHqpJjFUDGic+22mdoenITT+Ccz1LC61qMAc="
+  }
+  ```
+- **Authorization**: None
 
 ---
-
-
 
 ## Payment Integration
 
@@ -608,7 +625,5 @@ This application integrates with eSewa for payment processing. The `verifyEsewaP
 2. The API redirects the user to eSewa's payment gateway.
 3. Once the payment is completed, eSewa sends a response back to the `/success/:userId` route.
 4. The API verifies the payment by and if the payment is successful then a new order is created in the database.
-
-
 
 ---

@@ -58,7 +58,7 @@ describe("Product Service", () => {
       };
       const result = await productService.updateProductPrice(
         productId,
-        newPrice
+        newPrice,
       );
       assert.deepStrictEqual(result, { id: productId, price: newPrice });
     });
@@ -77,7 +77,7 @@ describe("Product Service", () => {
         assert(error instanceof NotFoundError);
         assert.strictEqual(
           error.message,
-          `Product with ID ${productId} not found`
+          `Product with ID ${productId} not found`,
         );
       }
     });
@@ -103,7 +103,7 @@ describe("Product Service", () => {
       };
       const updatedProduct = await productService.updateProductStock(
         productId,
-        newStock
+        newStock,
       );
       assert.deepStrictEqual(updatedProduct.inventoryCount, newStock);
       assert.strictEqual(updatedProduct.isActive, true);
@@ -123,7 +123,7 @@ describe("Product Service", () => {
         assert(error instanceof NotFoundError);
         assert.strictEqual(
           error.message,
-          `Product with ID ${productId} not found`
+          `Product with ID ${productId} not found`,
         );
       }
     });

@@ -4,15 +4,16 @@ import * as productService from "../services/product";
 export async function addProduct(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const productData = req.body;
     const newProduct = await productService.addProduct(productData);
     res.json({
-      success:true,
-      message:"Product added successfully",
-      newProduct});
+      success: true,
+      message: "Product added successfully",
+      newProduct,
+    });
   } catch (error) {
     next(error);
   }
@@ -21,7 +22,7 @@ export async function addProduct(
 export async function updatePrice(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const productId = Number(req.params.productId);
   const { newPrice } = req.body;
@@ -29,13 +30,13 @@ export async function updatePrice(
   try {
     const updatedProduct = await productService.updateProductPrice(
       productId,
-      newPrice
+      newPrice,
     );
     res.json({
-      success:true,
-      message:"Price updated successfully",
-      updatedProduct}
-      );
+      success: true,
+      message: "Price updated successfully",
+      updatedProduct,
+    });
   } catch (error) {
     next(error);
   }
@@ -44,7 +45,7 @@ export async function updatePrice(
 export async function updateStock(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const productId = Number(req.params.productId);
   const { newStock } = req.body;
@@ -52,12 +53,13 @@ export async function updateStock(
   try {
     const updatedProduct = await productService.updateProductStock(
       productId,
-      newStock
+      newStock,
     );
     res.json({
-      success:true,
-      message:"Product stock updated successfully",
-      updatedProduct});
+      success: true,
+      message: "Product stock updated successfully",
+      updatedProduct,
+    });
   } catch (error) {
     next(error);
   }
@@ -66,7 +68,7 @@ export async function updateStock(
 export async function getProducts(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   try {
     const {

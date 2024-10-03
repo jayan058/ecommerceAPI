@@ -26,17 +26,14 @@ export async function createOrder(userId) {
   }
 }
 
-
-export async function getAllOrders(page:number,limit:number){
-  try{
-  let orderData = await orderModel.OrderModel.getAllOrders(page, limit);
-  if(!orderData){
-    throw new NotFoundError ("No orders to show")
+export async function getAllOrders(page: number, limit: number) {
+  try {
+    let orderData = await orderModel.OrderModel.getAllOrders(page, limit);
+    if (!orderData) {
+      throw new NotFoundError("No orders to show");
+    }
+    return orderData;
+  } catch (error) {
+    throw error;
   }
-  return orderData
-}
-catch(error){
-  throw(error)
-}
-
 }

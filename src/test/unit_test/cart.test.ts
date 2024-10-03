@@ -70,7 +70,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
           throw new Error(
-            `Expected NotFoundError, but got ${error.constructor.name}`
+            `Expected NotFoundError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -88,7 +88,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
           throw new Error(
-            `Expected BadRequestError, but got ${error.constructor.name}`
+            `Expected BadRequestError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -108,7 +108,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
           throw new Error(
-            `Expected BadRequestError, but got ${error.constructor.name}`
+            `Expected BadRequestError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -153,7 +153,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
           throw new Error(
-            `Expected NotFoundError, but got ${error.constructor.name}`
+            `Expected NotFoundError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -186,12 +186,12 @@ describe("Cart Service Unit Tests", () => {
         updateQuantityStub.firstCall.args[1] !== newQuantity
       ) {
         throw new Error(
-          "updateCartQuantity was not called with the correct arguments"
+          "updateCartQuantity was not called with the correct arguments",
         );
       }
       if (updateStockStub.callCount !== 1)
         throw new Error(
-          "updateStock was not called with the correct arguments"
+          "updateStock was not called with the correct arguments",
         );
     });
 
@@ -226,12 +226,12 @@ describe("Cart Service Unit Tests", () => {
           updateQuantityStub.firstCall.args[1] !== newQuantity
         ) {
           throw new Error(
-            "updateCartQuantity was not called with the correct arguments"
+            "updateCartQuantity was not called with the correct arguments",
           );
         }
         if (updateStockStub.callCount !== 1)
           throw new Error(
-            "updateStock was not called with the correct arguments"
+            "updateStock was not called with the correct arguments",
           );
       });
       const productId = 999;
@@ -246,7 +246,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
           throw new Error(
-            `Expected NotFoundError, but got ${error.constructor.name}`
+            `Expected NotFoundError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -269,7 +269,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
           throw new Error(
-            `Expected BadRequestError, but got ${error.constructor.name}`
+            `Expected BadRequestError, but got ${error.constructor.name}`,
           );
         }
       }
@@ -307,7 +307,7 @@ describe("Cart Service Unit Tests", () => {
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
           throw new Error(
-            `Expected NotFoundError, but got ${error.constructor.name}`
+            `Expected NotFoundError, but got ${error.constructor.name}`,
           );
         }
       }
