@@ -174,9 +174,6 @@ export async function deleteCartItem(
 
     return `Product with id ${productId} removed from cart, and inventory updated successfully.`;
   } catch (error) {
-    throw new ValidationError(
-      `Error deleting product from cart: ${error.message}`,
-      " ",
-    );
+    throw(error)
   }
 }
