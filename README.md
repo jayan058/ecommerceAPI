@@ -1,6 +1,6 @@
 ---
 
-# E-Commerce API With Unit Testing
+# E-Commerce API With Unit Testing and Integration Testing
 
 An e-commerce platform built using Node.js and PostgreSQL, supporting various functionalities such as user authentication, product management, shopping cart, and payment integration using eSewa. This API serves as the backend for an e-commerce application and includes JWT-based user authentication, CRUD operations, and secure payment processing.
 
