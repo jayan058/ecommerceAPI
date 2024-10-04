@@ -122,12 +122,12 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 
 
 ---
+
 ## Running the Unit Tests
 
-
-   ```bash
-   npm run test
-   ```
+```bash
+npm run test
+```
 
 ---
 
@@ -136,7 +136,9 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 To run the integration tests for the project, follow these steps:
 
 1. **Set Up the Database:**
+
    - First, make sure your database is set up correctly. Run the following commands to create the database schema and seed it with initial data:
+
      ```bash
      # Run migrations to create database schema
      npm run migrate
@@ -146,39 +148,41 @@ To run the integration tests for the project, follow these steps:
      ```
 
 2. **Login as Admin:**
+
    - After setting up the database, log in as an admin user using the following credentials:
      - **Email:** `jaya@jaya.com`
      - **Password:** `jayajaya`
-   - This will provide you with an **admin token**. 
+   - This will provide you with an **admin token**.
 
      ```bash
      POST /login
-     Body: { "email": "jaya@jaya.com", 
-             "password": "jayajaya" 
+     Body: { "email": "jaya@jaya.com",
+             "password": "jayajaya"
             }
      ```
 
    - Copy the received admin token (`refreshToken`) from the response.
 
 3. **Update Product Test Data:**
+
    - Navigate to the product test data file (**productTestData.ts**) in the project.
    - Locate the line where the `authHeader` constant is defined. It should look like:
 
      ```typescript
-     export const authHeader = `Bearer YOUR_ADMIN_TOKEN_HERE`
-
+     export const authHeader = `Bearer YOUR_ADMIN_TOKEN_HERE`;
      ```
 
    - Replace the placeholder `"YOUR_ADMIN_TOKEN_HERE"` with the copied admin token from the previous step.
 
 4. **Create a New User and Obtain User Tokens:**
+
    - Create a new user by sending a request to the user registration route. For example:
 
      ```bash
      POST /user
      Body: { "userName": "Test User",
-              "email": "testuser@test.com", 
-              "password": "testpassword" 
+              "email": "testuser@test.com",
+              "password": "testpassword"
             }
      ```
 
@@ -186,26 +190,28 @@ To run the integration tests for the project, follow these steps:
 
      ```bash
      POST /login
-     Body: { "email": "testuser@test.com", 
-              "password": "testpassword" 
+     Body: { "email": "testuser@test.com",
+              "password": "testpassword"
             }
      ```
 
    - Copy the `refreshToken` from the response.
 
 5. **Update Cart Test Data:**
+
    - Navigate to the cart test data file (**cartTestData.ts**)
    - Locate the line where the `authHeader` is defined for the cart tests. It should look like:
 
      ```typescript
-      authHeader : {
-       bearerToken: "YOUR_REFRESH_TOKEN_HERE"
-     };
+     authHeader: {
+       bearerToken: "YOUR_REFRESH_TOKEN_HERE";
+     }
      ```
 
    - Replace the placeholder `"YOUR_REFRESH_TOKEN_HERE"` with the user’s `refreshToken` obtained in the previous step.
 
 6. **Run Integration Tests:**
+
    - Now, you can run the integration tests using the following command:
 
      ```bash
@@ -215,10 +221,7 @@ To run the integration tests for the project, follow these steps:
 7. **Verify Test Results:**
    - After running the tests, check the console output for test results and ensure all tests pass successfully.
 
-
-
 ---
-
 
 ## API Endpoints
 

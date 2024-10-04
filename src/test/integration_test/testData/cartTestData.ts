@@ -1,5 +1,5 @@
 export const testCartData = {
-  validItem: { "productId": 1, "quantity": 2 },
+  validItem: { productId: 1, quantity: 2 },
   insufficientStock: { productId: 1, quantity: 20 },
   missingProductId: { quantity: 2 },
   invalidQuantity: { productId: 1, quantity: "two" },
