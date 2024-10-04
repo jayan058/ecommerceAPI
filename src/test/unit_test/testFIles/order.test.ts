@@ -1,8 +1,8 @@
 import sinon from "sinon";
-import * as cartModel from "../../models/cart";
-import * as orderModel from "../../models/order";
-import * as orderService from "../../services/order";
-import NotFoundError from "../../error/notFoundError";
+import * as cartModel from "../../../models/cart";
+import * as orderModel from "../../../models/order";
+import * as orderService from "../../../services/order";
+import NotFoundError from "../../../error/notFoundError";
 
 describe("Order Service", () => {
   const userId = "1";

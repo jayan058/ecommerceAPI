@@ -11,7 +11,7 @@ export async function addToCart(
   const { productId, quantity } = req.body;
   try {
     const newCart = await cartService.addToCart(userId, productId, quantity);
-    res.json(newCart);
+    res.json({ message: "Added successfully to cart.", newCart });
   } catch (error) {
     next(error);
   }
@@ -44,7 +44,7 @@ export async function updateCart(
       productId,
       quantity,
     );
-    res.json(updatedCart);
+    res.json({ message: "Cart updated successfully.", updatedCart });
   } catch (error) {
     next(error);
   }

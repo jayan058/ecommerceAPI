@@ -1,8 +1,8 @@
 import sinon from "sinon";
-import * as userModels from "../../models/User";
-import * as authService from "../../services/auth";
-import NotFoundError from "../../error/notFoundError";
-import UnauthorizedError from "../../error/unauthorizedError";
+import * as userModels from "../../../models/User";
+import * as authService from "../../../services/auth";
+import NotFoundError from "../../../error/notFoundError";
+import UnauthorizedError from "../../../error/unauthorizedError";
 import { Response } from "express";
 import bcrypt from "bcrypt";
 

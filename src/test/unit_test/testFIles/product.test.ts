@@ -1,7 +1,7 @@
-import * as productModel from "../../models/Products";
-import * as productService from "../../services/product";
-import ValidationError from "../../error/validationError";
-import NotFoundError from "../../error/notFoundError";
+import * as productModel from "../../../models/Products";
+import * as productService from "../../../services/product";
+import ValidationError from "../../../error/validationError";
+import NotFoundError from "../../../error/notFoundError";
 import { strict as assert } from "assert";
 
 describe("Product Service", () => {

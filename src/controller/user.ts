@@ -8,8 +8,8 @@ export async function createUser(
 ) {
   try {
     const { userName, email, password } = req.body;
-    const message = await userServices.createUser(userName, email, password);
-    res.json(message);
+    const newUser = await userServices.createUser(userName, email, password);
+    res.json({ newUser, message: "User created successfully." });
   } catch (error) {
     next(error);
   }

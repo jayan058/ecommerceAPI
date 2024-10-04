@@ -1,9 +1,9 @@
 import sinon from "sinon";
-import * as cartModel from "../../models/cart";
-import * as productModel from "../../models/Products";
-import * as cartService from "../../services/cart";
-import NotFoundError from "../../error/notFoundError";
-import BadRequestError from "../../error/badRequestError";
+import * as cartModel from "../../../models/cart";
+import * as productModel from "../../../models/Products";
+import * as cartService from "../../../services/cart";
+import NotFoundError from "../../../error/notFoundError";
+import BadRequestError from "../../../error/badRequestError";
 
 describe("Cart Service Unit Tests", () => {
   afterEach(() => {

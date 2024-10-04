@@ -1,7 +1,7 @@
 import sinon from "sinon";
-import * as userModels from "../../models/User";
-import * as userService from "../../services/user";
-import ConflictError from "../../error/conflictError";
+import * as userModels from "../../../models/User";
+import * as userService from "../../../services/user";
+import ConflictError from "../../../error/conflictError";
 import bcrypt from "bcrypt";
 
 describe("User Service", () => {
