@@ -13,10 +13,10 @@ An e-commerce platform built using Node.js and PostgreSQL, supporting various fu
 5. [Installation](#installation)
 6. [Environment Variables](#environment-variables)
 7. [Running the Project](#running-the-project)
+8. [Running the Unit tests](#running-the-unit-tests)
 8. [API Endpoints](#api-endpoints)
-9. [Admin Functionalities](#admin-functionalities)
-10. [Payment Integration](#payment-integration)
-11. [License](#license)
+9. [Payment Integration](#payment-integration)
+
 
 ## Features
 
@@ -48,6 +48,13 @@ An e-commerce platform built using Node.js and PostgreSQL, supporting various fu
 - **Joi**: Schema validation for request bodies, headers, and query parameters.
 - **Rate Limiter**: To prevent brute-force attacks and abuse of the API by limiting the number of requests.
 - **Helmet**: Security middleware to set various HTTP headers and protect against common vulnerabilities.
+- **Mocha**: Used for unit testing.
+- **Chai**: Used for assertions during unit testing.
+- **Sinon**: Used for stubbing the model functions during unit testing.
+- **Supertest**: Used for integration testing.
+
+
+
 
 ## Requirements
 
@@ -112,6 +119,14 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 2. The server should be running on [http://localhost:your_port_number](http://localhost:your_port_number).
 
 
+
+---
+## Running the Unit Tests
+
+
+   ```bash
+   npm run test
+   ```
 
 ---
 
