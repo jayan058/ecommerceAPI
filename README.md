@@ -131,7 +131,7 @@ ESEWA_PAYMENT_VERIFY_URL=https://uat.esewa.com.np/api/epay/transaction/status/?p
 
 ---
 
-## Running Integration Tests
+## Running the Integration Tests
 
 To run the integration tests for the project, follow these steps:
 
