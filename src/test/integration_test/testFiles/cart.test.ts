@@ -17,13 +17,13 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 200) {
         console.log(
-          `Test failed: Expected status 200 but received ${response.status}`
+          `Test failed: Expected status 200 but received ${response.status}`,
         );
       }
 
       if (response.body.message !== testCartData.expectedMessages.addSuccess) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.addSuccess}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.addSuccess}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Item added to cart successfully.");
@@ -38,7 +38,7 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 400) {
         console.log(
-          `Test failed: Expected status 400 but received ${response.status}`
+          `Test failed: Expected status 400 but received ${response.status}`,
         );
       }
 
@@ -47,7 +47,7 @@ describe("Cart Routes Integration Test", () => {
         testCartData.expectedMessages.insufficientStock
       ) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.insufficientStock}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.insufficientStock}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Insufficient stock error handled correctly.");
@@ -62,7 +62,7 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 400) {
         console.log(
-          `Test failed: Expected status 400 but received ${response.status}`
+          `Test failed: Expected status 400 but received ${response.status}`,
         );
       }
 
@@ -70,7 +70,7 @@ describe("Cart Routes Integration Test", () => {
         response.body.message !== testCartData.expectedMessages.missingProductId
       ) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.missingProductId}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.missingProductId}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Missing product ID error handled correctly.");
@@ -85,7 +85,7 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 400) {
         console.log(
-          `Test failed: Expected status 400 but received ${response.status}`
+          `Test failed: Expected status 400 but received ${response.status}`,
         );
       }
 
@@ -93,7 +93,7 @@ describe("Cart Routes Integration Test", () => {
         response.body.message !== testCartData.expectedMessages.invalidQuantity
       ) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.invalidQuantity}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.invalidQuantity}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Invalid quantity error handled correctly.");
@@ -110,7 +110,7 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 200) {
         console.log(
-          `Test failed: Expected status 200 but received ${response.status}`
+          `Test failed: Expected status 200 but received ${response.status}`,
         );
       }
 
@@ -119,7 +119,7 @@ describe("Cart Routes Integration Test", () => {
         testCartData.expectedMessages.cartUpdateSuccess
       ) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.cartUpdateSuccess}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.cartUpdateSuccess}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Item quantity updated successfully.");
@@ -134,7 +134,7 @@ describe("Cart Routes Integration Test", () => {
 
       if (response.status !== 404) {
         console.log(
-          `Test failed: Expected status 404 but received ${response.status}`
+          `Test failed: Expected status 404 but received ${response.status}`,
         );
       }
 
@@ -142,7 +142,7 @@ describe("Cart Routes Integration Test", () => {
         response.body.message !== testCartData.expectedMessages.productNotFound
       ) {
         console.log(
-          `Test failed: Expected "${testCartData.expectedMessages.productNotFound}" but received "${response.body.message}"`
+          `Test failed: Expected "${testCartData.expectedMessages.productNotFound}" but received "${response.body.message}"`,
         );
       } else {
         console.log("Test passed: Non-existing item error handled correctly.");

@@ -3,40 +3,30 @@ import * as productService from "../../../services/product";
 import ValidationError from "../../../error/validationError";
 import NotFoundError from "../../../error/notFoundError";
 import { strict as assert } from "assert";
+import { productTestData } from "../testData/productTestData";
 
 describe("Product Service", () => {
   describe("addProduct", () => {
     it("should add a new product", async () => {
-      const productData = {
-        name: "Test Product",
-        brand: "Test Brand",
-        category: "Test Category",
-        price: 100,
-        inventory_count: 10,
-        description: "Sample Description",
-        created_at: "vfovj",
-      };
       productModel.ProductModel.create = async () => {
-        return { id: 1, ...productData };
+        return { id: 1, ...productTestData.validProductData };
       };
-      const result = await productService.addProduct(productData);
-      assert.deepStrictEqual(result, { id: 1, ...productData });
+      const result = await productService.addProduct(
+        productTestData.validProductData,
+      );
+      assert.deepStrictEqual(result, {
+        id: 1,
+        ...productTestData.validProductData,
+      });
     });
 
     it("should throw ValidationError if product creation fails", async () => {
-      const productData = {
-        name: "Test Product",
-        brand: "Test Brand",
-        category: "Test Category",
-        price: 100,
-        inventory_count: 10,
-      };
       productModel.ProductModel.create = async () => {
         throw new Error("Creation failed");
       };
 
       try {
-        await productService.addProduct(productData);
+        await productService.addProduct(productTestData.invalidProductData);
         assert.fail("Expected ValidationError was not thrown");
       } catch (error) {
         assert(error instanceof ValidationError);
@@ -47,37 +37,42 @@ describe("Product Service", () => {
 
   describe("updateProductPrice", () => {
     it("should update the price of an existing product", async () => {
-      const productId = 1;
-      const newPrice = 150;
-      const existingProduct = { id: productId, price: 100 };
+      const existingProduct = { id: productTestData.productId, price: 100 };
       productModel.ProductModel.findById = async (id) => {
-        return id === productId ? existingProduct : null;
+        return id === productTestData.productId ? existingProduct : null;
       };
       productModel.ProductModel.updatePrice = async () => {
-        return { id: productId, newPrice: newPrice };
+        return {
+          id: productTestData.productId,
+          newPrice: productTestData.newPrice,
+        };
       };
       const result = await productService.updateProductPrice(
-        productId,
-        newPrice,
+        productTestData.productId,
+        productTestData.newPrice,
       );
-      assert.deepStrictEqual(result, { id: productId, price: newPrice });
+      assert.deepStrictEqual(result, {
+        id: productTestData.productId,
+        price: productTestData.newPrice,
+      });
     });
 
     it("should throw NotFoundError if the product does not exist", async () => {
-      const productId = 1;
-      const newPrice = 150;
       productModel.ProductModel.findById = async (id) => {
         return null;
       };
 
       try {
-        await productService.updateProductPrice(productId, newPrice);
+        await productService.updateProductPrice(
+          productTestData.productId,
+          productTestData.newPrice,
+        );
         assert.fail("Expected NotFoundError was not thrown");
       } catch (error) {
         assert(error instanceof NotFoundError);
         assert.strictEqual(
           error.message,
-          `Product with ID ${productId} not found`,
+          `Product with ID ${productTestData.productId} not found`,
         );
       }
     });
@@ -85,15 +80,13 @@ describe("Product Service", () => {
 
   describe("updateProductStock", () => {
     it("should update the stock of an existing product", async () => {
-      const productId = 1;
-      const newStock = 20;
       const existingProduct = {
-        id: productId,
+        id: productTestData.productId,
         inventoryCount: 10,
         isActive: false,
       };
       productModel.ProductModel.findById = async (id) => {
-        return id === productId ? existingProduct : null;
+        return id === productTestData.productId ? existingProduct : null;
       };
       productModel.ProductModel.updateStock = async (id, stock) => {
         existingProduct.inventoryCount = stock;
@@ -102,28 +95,32 @@ describe("Product Service", () => {
         existingProduct.isActive = status;
       };
       const updatedProduct = await productService.updateProductStock(
-        productId,
-        newStock,
+        productTestData.productId,
+        productTestData.newStock,
       );
-      assert.deepStrictEqual(updatedProduct.inventoryCount, newStock);
+      assert.deepStrictEqual(
+        updatedProduct.inventoryCount,
+        productTestData.newStock,
+      );
       assert.strictEqual(updatedProduct.isActive, true);
     });
 
     it("should throw NotFoundError if the product does not exist", async () => {
-      const productId = 1;
-      const newStock = 20;
       productModel.ProductModel.findById = async (id) => {
         return null;
       };
 
       try {
-        await productService.updateProductStock(productId, newStock);
+        await productService.updateProductStock(
+          productTestData.productId,
+          productTestData.newStock,
+        );
         assert.fail("Expected NotFoundError was not thrown");
       } catch (error) {
         assert(error instanceof NotFoundError);
         assert.strictEqual(
           error.message,
-          `Product with ID ${productId} not found`,
+          `Product with ID ${productTestData.productId} not found`,
         );
       }
     });
@@ -131,30 +128,22 @@ describe("Product Service", () => {
 
   describe("getFilteredProducts", () => {
     it("should return filtered products and total count", async () => {
-      const filters = {
-        category: "Test Category",
-        brand: "Test Brand",
-        priceRange: "100-200",
-        name: "Test",
-        page: 1,
-        limit: 10,
-      };
-
-      const products = [
-        { id: 1, name: "Test Product" },
-        { id: 2, name: "Another Product" },
-      ];
-      const totalCount = products.length;
+      const totalCount = productTestData.products.length;
 
       productModel.ProductModel.findWithFilters = async () => {
-        return products;
+        return productTestData.products;
       };
       productModel.ProductModel.countFilteredProducts = async () => {
         return totalCount;
       };
 
-      const result = await productService.getFilteredProducts(filters);
-      assert.deepStrictEqual(result, { products, totalCount });
+      const result = await productService.getFilteredProducts(
+        productTestData.filters,
+      );
+      assert.deepStrictEqual(result, {
+        products: productTestData.products,
+        totalCount,
+      });
     });
   });
 });

@@ -4,6 +4,12 @@ import * as productModel from "../../../models/Products";
 import * as cartService from "../../../services/cart";
 import NotFoundError from "../../../error/notFoundError";
 import BadRequestError from "../../../error/badRequestError";
+import {
+  addToCartTestData,
+  viewCartTestData,
+  updateCartTestData,
+  removeFromCartTestData,
+} from "../testData/cartTestData";
 
 describe("Cart Service Unit Tests", () => {
   afterEach(() => {
@@ -12,13 +18,10 @@ describe("Cart Service Unit Tests", () => {
 
   describe("addToCart", () => {
     it("should add product to cart if product exists and inventory is sufficient", async () => {
-      const productId = 1;
-      const userId = "user1";
-      const quantity = 2;
-      const product = { id: productId, name: "Product 1", inventoryCount: 10 };
+      const { validProduct, validUserId, validQuantity } = addToCartTestData;
 
       productModel.ProductModel.findById = async () => {
-        return product;
+        return validProduct;
       };
 
       cartModel.CartModel.findByProductId = async () => {
@@ -27,26 +30,25 @@ describe("Cart Service Unit Tests", () => {
 
       cartModel.CartModel.addToCart = async () => {
         return {
-          user_id: userId,
-          product_id: productId,
-          quantity: quantity,
+          user_id: validUserId,
+          product_id: validProduct.id,
+          quantity: validQuantity,
           created_at: new Date().toISOString(),
-          created_by: userId,
+          created_by: validUserId,
           updated_at: new Date().toISOString(),
-          updated_by: userId,
+          updated_by: validUserId,
         };
       };
 
       productModel.ProductModel.updateStock = async () => {};
-
       productModel.ProductModel.updateStatus = async () => {};
 
       cartModel.CartModel.findByUserId = async (userId) => {
         return [
           {
             user_id: userId,
-            product_id: productId,
-            quantity: quantity,
+            product_id: validProduct.id,
+            quantity: validQuantity,
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             productName: "Product 1",
@@ -56,16 +58,19 @@ describe("Cart Service Unit Tests", () => {
           },
         ];
       };
-      await cartService.addToCart(userId, productId, quantity);
+      await cartService.addToCart(validUserId, validProduct.id, validQuantity);
     });
 
     it("should throw NotFoundError if product does not exist", async () => {
-      const productId = 999;
-      const userId = "user1";
-      const quantity = 2;
+      const { invalidProductId, validUserId, validQuantity } =
+        addToCartTestData;
       sinon.stub(productModel.ProductModel, "findById").resolves(null);
       try {
-        await cartService.addToCart(userId, productId, quantity);
+        await cartService.addToCart(
+          validUserId,
+          invalidProductId,
+          validQuantity,
+        );
         throw new Error("Expected NotFoundError was not thrown");
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
@@ -77,13 +82,15 @@ describe("Cart Service Unit Tests", () => {
     });
 
     it("should throw BadRequestError if desired quantity exceeds stock", async () => {
-      const productId = 1;
-      const userId = "user1";
-      const quantity = 15;
-      const product = { id: productId, name: "Product 1", inventoryCount: 10 };
-      sinon.stub(productModel.ProductModel, "findById").resolves(product);
+      const { validProduct, excessiveQuantity, validUserId } =
+        addToCartTestData;
+      sinon.stub(productModel.ProductModel, "findById").resolves(validProduct);
       try {
-        await cartService.addToCart(userId, productId, quantity);
+        await cartService.addToCart(
+          validUserId,
+          validProduct.id,
+          excessiveQuantity,
+        );
         throw new Error("Expected BadRequestError was not thrown");
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
@@ -95,15 +102,17 @@ describe("Cart Service Unit Tests", () => {
     });
 
     it("should throw BadRequestError if inventory count becomes negative", async () => {
-      const productId = 1;
-      const userId = "user1";
-      const quantity = 15;
-      const product = { id: productId, inventoryCount: 10 };
-      sinon.stub(productModel.ProductModel, "findById").resolves(product);
+      const { validUserId, excessiveQuantity, validProduct } =
+        addToCartTestData;
+      sinon.stub(productModel.ProductModel, "findById").resolves(validProduct);
       sinon.stub(cartModel.CartModel, "findByProductId").resolves(null);
       sinon.stub(cartModel.CartModel, "addToCart").resolves();
       try {
-        await cartService.addToCart(userId, productId, quantity);
+        await cartService.addToCart(
+          validUserId,
+          validProduct.id,
+          excessiveQuantity,
+        );
         throw new Error("Expected BadRequestError was not thrown");
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
@@ -117,27 +126,9 @@ describe("Cart Service Unit Tests", () => {
 
   describe("viewCart", () => {
     it("should return cart items for a valid user", async () => {
-      const userId = "user1";
-      const cartItems = [
-        {
-          productId: 1,
-          productName: "Product 1",
-          productBrand: "Brand A",
-          productCategory: "Category A",
-          quantity: 2,
-          productPrice: 20,
-        },
-        {
-          productId: 2,
-          productName: "Product 2",
-          productBrand: "Brand B",
-          productCategory: "Category B",
-          quantity: 1,
-          productPrice: 30,
-        },
-      ];
+      const { validUserId, cartItems } = viewCartTestData;
       sinon.stub(cartModel.CartModel, "findByUserId").resolves(cartItems);
-      const result = await cartService.viewCart(userId);
+      const result = await cartService.viewCart(validUserId);
       if (result.length !== cartItems.length)
         throw new Error("The number of cart items returned is incorrect");
       if (result[0].id !== cartItems[0].productId)
@@ -145,10 +136,10 @@ describe("Cart Service Unit Tests", () => {
     });
 
     it("should throw NotFoundError if cart is empty", async () => {
-      const userId = "user1";
+      const { validUserId } = viewCartTestData;
       sinon.stub(cartModel.CartModel, "findByUserId").resolves([]);
       try {
-        await cartService.viewCart(userId);
+        await cartService.viewCart(validUserId);
         throw new Error("Expected NotFoundError was not thrown");
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
@@ -162,13 +153,15 @@ describe("Cart Service Unit Tests", () => {
 
   describe("updateCart", () => {
     it("should update the quantity of an existing cart item", async () => {
-      const userId = "2";
-      const productId = 1;
-      const newQuantity = 2;
-      const existingQuantity = 1;
-      const product = { id: productId, inventoryCount: 10 };
+      const {
+        validUserId,
+        productId,
+        newQuantity,
+        existingQuantity,
+        validProduct,
+      } = updateCartTestData;
       const existingCartItem = { id: 1, productId, quantity: existingQuantity };
-      sinon.stub(productModel.ProductModel, "findById").resolves(product);
+      sinon.stub(productModel.ProductModel, "findById").resolves(validProduct);
       sinon
         .stub(cartModel.CartModel, "findByProductId")
         .resolves(existingCartItem);
@@ -178,7 +171,7 @@ describe("Cart Service Unit Tests", () => {
       const updateStockStub = sinon
         .stub(productModel.ProductModel, "updateStock")
         .resolves();
-      await cartService.updateCart(userId, productId, newQuantity);
+      await cartService.updateCart(validUserId, productId, newQuantity);
       if (!updateQuantityStub.calledOnce)
         throw new Error("updateCartQuantity was not called");
       if (
@@ -196,52 +189,17 @@ describe("Cart Service Unit Tests", () => {
     });
 
     it("should throw NotFoundError if cart item does not exist", async () => {
-      const userId = "user1";
-      it("should update the quantity of an existing cart item", async () => {
-        const userId = "1";
-        const productId = 1;
-        const newQuantity = 2;
-        const existingQuantity = 1;
-        const product = { id: productId, inventoryCount: 10 };
-        const existingCartItem = {
-          id: 1,
-          productId,
-          quantity: existingQuantity,
-        };
-        sinon.stub(productModel.ProductModel, "findById").resolves(product);
-        sinon
-          .stub(cartModel.CartModel, "findByProductId")
-          .resolves(existingCartItem);
-        const updateQuantityStub = sinon
-          .stub(cartModel.CartModel, "updateCartQuantity")
-          .resolves();
-        const updateStockStub = sinon
-          .stub(productModel.ProductModel, "updateStock")
-          .resolves();
-        await cartService.updateCart(userId, productId, newQuantity);
-        if (!updateQuantityStub.calledOnce)
-          throw new Error("updateCartQuantity was not called");
-        if (
-          updateQuantityStub.firstCall.args[0] !== existingCartItem.id ||
-          updateQuantityStub.firstCall.args[1] !== newQuantity
-        ) {
-          throw new Error(
-            "updateCartQuantity was not called with the correct arguments",
-          );
-        }
-        if (updateStockStub.callCount !== 1)
-          throw new Error(
-            "updateStock was not called with the correct arguments",
-          );
-      });
-      const productId = 999;
-      const newQuantity = 2;
+      const { validUserId, invalidProductId, newQuantity } = updateCartTestData;
       sinon
         .stub(productModel.ProductModel, "findById")
-        .resolves({ id: productId, inventoryCount: 10 });
+        .resolves({ id: invalidProductId, inventoryCount: 10 });
       sinon.stub(cartModel.CartModel, "findByProductId").resolves(null);
       try {
-        await cartService.updateCart(userId, productId, newQuantity);
+        await cartService.updateCart(
+          validUserId,
+          invalidProductId,
+          newQuantity,
+        );
         throw new Error("Expected NotFoundError was not thrown");
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
@@ -253,18 +211,20 @@ describe("Cart Service Unit Tests", () => {
     });
 
     it("should throw BadRequestError if the updated quantity exceeds available stock", async () => {
-      const userId = "user1";
-      const productId = 1;
-      const newQuantity = 15;
-      const existingQuantity = 1;
-      const product = { id: productId, inventoryCount: 10 };
+      const {
+        validUserId,
+        productId,
+        excessiveQuantity,
+        existingQuantity,
+        validProduct,
+      } = updateCartTestData;
       const existingCartItem = { id: 1, productId, quantity: existingQuantity };
-      sinon.stub(productModel.ProductModel, "findById").resolves(product);
+      sinon.stub(productModel.ProductModel, "findById").resolves(validProduct);
       sinon
         .stub(cartModel.CartModel, "findByProductId")
         .resolves(existingCartItem);
       try {
-        await cartService.updateCart(userId, productId, newQuantity);
+        await cartService.updateCart(validUserId, productId, excessiveQuantity);
         throw new Error("Expected BadRequestError was not thrown");
       } catch (error) {
         if (!(error instanceof BadRequestError)) {
@@ -276,11 +236,10 @@ describe("Cart Service Unit Tests", () => {
     });
   });
 
-  describe("removeFromCart", () => {
+  describe("deleteCartItem", () => {
     it("should remove an existing cart item", async () => {
-      const userId = "user1";
-      const productId = 1;
-      const existingCartItem = { id: 1, productId };
+      const { validUserId, validProductId } = removeFromCartTestData;
+      const existingCartItem = { id: 1, productId: validProductId };
       sinon
         .stub(cartModel.CartModel, "findByProductId")
         .resolves(existingCartItem);
@@ -290,20 +249,21 @@ describe("Cart Service Unit Tests", () => {
       const updateStockStub = sinon
         .stub(productModel.ProductModel, "updateStock")
         .resolves();
-      await cartService.deleteCartItem(userId, productId);
+      await cartService.deleteCartItem(validUserId, validProductId);
       if (!removeItemStub.calledOnce)
-        throw new Error("removeFromCart was not called");
+        throw new Error("deleteCartItem was not called");
       if (updateStockStub.callCount !== 1)
         throw new Error("updateStock was not called");
     });
 
-    it("should throw NotFoundError if cart item does not exist", async () => {
-      const userId = "user1";
-      const productId = 999;
-      sinon.stub(cartModel.CartModel, "findByProductId").resolves(null);
+    it("should throw NotFoundError if product does not exist in cart", async () => {
+      const { validUserId, invalidProductId } = removeFromCartTestData;
+      sinon
+        .stub(cartModel.CartModel, "deleteCartItem")
+        .throws(new NotFoundError("Product not found in cart"));
       try {
-        await cartService.deleteCartItem(userId, productId);
-        throw new NotFoundError("Expected NotFound was not thrown");
+        await cartService.deleteCartItem(validUserId, invalidProductId);
+        throw new Error("Expected NotFoundError was not thrown");
       } catch (error) {
         if (!(error instanceof NotFoundError)) {
           throw new Error(

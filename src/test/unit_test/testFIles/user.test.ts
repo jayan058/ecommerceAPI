@@ -3,19 +3,23 @@ import * as userModels from "../../../models/User";
 import * as userService from "../../../services/user";
 import ConflictError from "../../../error/conflictError";
 import bcrypt from "bcrypt";
+import {
+  name,
+  email,
+  password,
+  mockUser,
+  existingUser,
+  hashedPassword,
+} from "../testData/userTestData";
 
 describe("User Service", () => {
-  const name = "Test User";
-  const email = "test@example.com";
-  const password = "password123";
-
   afterEach(() => {
     sinon.restore();
   });
 
   describe("createUser", () => {
     it("should throw ConflictError if email is already taken", async () => {
-      sinon.stub(userModels.UserModel, "findByEmail").resolves([{}]);
+      sinon.stub(userModels.UserModel, "findByEmail").resolves(existingUser);
 
       try {
         await userService.createUser(name, email, password);
@@ -36,23 +40,20 @@ describe("User Service", () => {
 
     it("should create a user with a hashed password if email is not taken", async () => {
       sinon.stub(userModels.UserModel, "findByEmail").resolves([]);
-      const hashedPassword = await bcrypt.hash(password, 10);
       const bcryptHashStub = sinon
         .stub(bcrypt, "hash")
-        .resolves(hashedPassword);
+        .resolves(await hashedPassword());
 
-      const createStub = sinon.stub(userModels.UserModel, "create").resolves({
-        name,
-        email,
-        password: hashedPassword,
-      });
+      const createStub = sinon
+        .stub(userModels.UserModel, "create")
+        .resolves(mockUser);
 
       const result = await userService.createUser(name, email, password);
 
       if (
         result.name !== name ||
         result.email !== email ||
-        result.password !== hashedPassword
+        result.password !== mockUser.password
       ) {
         throw new Error("User was not created correctly");
       }
@@ -70,7 +71,7 @@ describe("User Service", () => {
 
     it("should throw an error if user creation fails", async () => {
       sinon.stub(userModels.UserModel, "findByEmail").resolves([]);
-      sinon.stub(bcrypt, "hash").resolves("hashedPassword");
+      sinon.stub(bcrypt, "hash").resolves(await hashedPassword());
       const createStub = sinon
         .stub(userModels.UserModel, "create")
         .rejects(new Error("Database error"));

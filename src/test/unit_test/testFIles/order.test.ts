@@ -3,22 +3,14 @@ import * as cartModel from "../../../models/cart";
 import * as orderModel from "../../../models/order";
 import * as orderService from "../../../services/order";
 import NotFoundError from "../../../error/notFoundError";
+import {
+  userId,
+  mockCartItems,
+  mockOrders,
+  emptyOrders,
+} from "../testData/orderTestData";
 
 describe("Order Service", () => {
-  const userId = "1";
-  const mockCartItems = [
-    {
-      productId: "101",
-      quantity: 2,
-      productPrice: "15.00",
-    },
-    {
-      productId: "102",
-      quantity: 1,
-      productPrice: "20.00",
-    },
-  ];
-
   afterEach(() => {
     sinon.restore();
   });
@@ -54,6 +46,7 @@ describe("Order Service", () => {
         .stub(orderModel.OrderModel, "addOrder")
         .rejects(new Error("Database error"));
       sinon.stub(cartModel.CartModel, "deleteAllByUserId").resolves();
+
       try {
         await orderService.createOrder(userId);
         throw new Error("Expected error was not thrown");
@@ -69,19 +62,16 @@ describe("Order Service", () => {
 
   describe("getAllOrders", () => {
     it("should return all orders if available", async () => {
-      const mockOrders = {
-        orders: [
-          { id: 1, user_id: userId, total_amount: 30.0 },
-          { id: 2, user_id: userId, total_amount: 20.0 },
-        ],
-        count: 2,
-      };
       sinon.stub(orderModel.OrderModel, "getAllOrders").resolves(mockOrders);
 
       const result = await orderService.getAllOrders(1, 10);
-      if (result.orders.length !== 2) {
-        throw new Error(`Expected 2 orders, but got ${result.orders.length}`);
+
+      if (result.orders.length !== mockOrders.orders.length) {
+        throw new Error(
+          `Expected ${mockOrders.orders.length} orders, but got ${result.orders.length}`,
+        );
       }
+
       const getAllOrdersStub = orderModel.OrderModel
         .getAllOrders as sinon.SinonStub;
       if (!getAllOrdersStub.calledOnce) {
@@ -90,12 +80,7 @@ describe("Order Service", () => {
     });
 
     it("should throw NotFoundError if no orders exist", async () => {
-      const mockOrders = {
-        orders: [],
-        count: 0,
-      };
-
-      sinon.stub(orderModel.OrderModel, "getAllOrders").resolves(mockOrders);
+      sinon.stub(orderModel.OrderModel, "getAllOrders").resolves(emptyOrders);
 
       try {
         await orderService.getAllOrders(1, 10);

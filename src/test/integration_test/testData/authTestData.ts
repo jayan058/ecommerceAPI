@@ -1,4 +1,3 @@
-// testData.js
 import { UserModel } from "../../../models/User";
 import bcrypt from "bcrypt";
 
@@ -16,7 +15,6 @@ export const createMockUser = async () => {
 
 export const deleteMockUser = async (userId) => {
   // Cleanup: Delete the mock user from the database
- 
 };
 
 export const mockUserData = {

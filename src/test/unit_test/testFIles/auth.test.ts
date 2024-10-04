@@ -5,6 +5,12 @@ import NotFoundError from "../../../error/notFoundError";
 import UnauthorizedError from "../../../error/unauthorizedError";
 import { Response } from "express";
 import bcrypt from "bcrypt";
+import {
+  email,
+  password,
+  mockUser,
+  wrongEmail,
+} from "../testData/authTestData";
 
 interface MockResponse extends Response {
   status: sinon.SinonStub;
@@ -13,14 +19,6 @@ interface MockResponse extends Response {
 
 describe("Auth Service", () => {
   let res: MockResponse;
-  const email = "test@example.com";
-  const password = "password123";
-  const mockUser = {
-    id: 1,
-    userName: "Test User",
-    email: email,
-    password: "$2b$10$randomhashedpassword",
-  };
 
   beforeEach(() => {
     res = {
@@ -55,7 +53,6 @@ describe("Auth Service", () => {
     });
 
     it("should throw NotFoundError if email does not match any user", async () => {
-      const wrongEmail = "wrong@example.com";
       sinon.stub(userModels.UserModel, "findByEmail").resolves([]);
 
       try {

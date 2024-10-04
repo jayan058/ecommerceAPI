@@ -2,7 +2,11 @@ import request from "supertest";
 import express from "express";
 import authRoute from "../../../router/auth";
 import errorHandler from "../../../middleware/errorHandler";
-import { createMockUser, deleteMockUser, mockUserData } from "../testData/authTestData";
+import {
+  createMockUser,
+  deleteMockUser,
+  mockUserData,
+} from "../testData/authTestData";
 
 const app = express();
 app.use(express.json());
@@ -25,7 +29,9 @@ describe("Auth Routes Integration Test", () => {
     it("should log in successfully and return access and refresh tokens", async () => {
       user = await createMockUser();
 
-      const response = await request(app).post("/auth").send(mockUserData.valid);
+      const response = await request(app)
+        .post("/auth")
+        .send(mockUserData.valid);
 
       logResult(
         200,
@@ -76,7 +82,9 @@ describe("Auth Routes Integration Test", () => {
     });
 
     it("should return error for non-existent email", async () => {
-      const response = await request(app).post("/auth").send(mockUserData.invalid);
+      const response = await request(app)
+        .post("/auth")
+        .send(mockUserData.invalid);
 
       logResult(
         404,
@@ -97,7 +105,9 @@ describe("Auth Routes Integration Test", () => {
   describe("POST /auth/token", () => {
     it("should return a new access token when valid refresh token is provided", async () => {
       user = await createMockUser();
-      const loginResponse = await request(app).post("/auth").send(mockUserData.valid);
+      const loginResponse = await request(app)
+        .post("/auth")
+        .send(mockUserData.valid);
       refreshToken = loginResponse.body.refreshToken;
 
       const response = await request(app).post("/auth/token").send({
