@@ -165,7 +165,7 @@ To run the integration tests for the project, follow these steps:
    - Locate the line where the `authHeader` constant is defined. It should look like:
 
      ```typescript
-     export const authHeader = "YOUR_ADMIN_TOKEN_HERE"
+     export const authHeader = `Bearer YOUR_ADMIN_TOKEN_HERE`
 
      ```
 
