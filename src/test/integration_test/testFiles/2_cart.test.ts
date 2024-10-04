@@ -14,7 +14,8 @@ describe("Cart Routes Integration Test", () => {
         .post("/cart")
         .set("Authorization", `Bearer ${testCartData.authHeader.bearerToken}`)
         .send(testCartData.validItem);
-
+     
+      
       if (response.status !== 200) {
         console.log(
           `Test failed: Expected status 200 but received ${response.status}`,

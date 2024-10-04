@@ -1,12 +1,12 @@
 export const userData = {
   validUser: {
     userName: "John Doe",
-    email: "jenny.dorthy@example.com",
+    email: "ecommercetestuser@amazon.com",
     password: "password123",
   },
   duplicateUser: {
     userName: "John Smith",
-    email: "jenny.dorthy@example.com",
+    email: "ecommercetestuser@amazon.com",
     password: "password456",
   },
   missingFields: {

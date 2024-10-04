@@ -1,5 +1,5 @@
 export const testCartData = {
-  validItem: { productId: 1, quantity: 2 },
+  validItem: { "productId": 1, "quantity": 2 },
   insufficientStock: { productId: 1, quantity: 20 },
   missingProductId: { quantity: 2 },
   invalidQuantity: { productId: 1, quantity: "two" },
@@ -20,6 +20,6 @@ export const testCartData = {
 
   authHeader: {
     bearerToken:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJwZXJtaXNzaW9ucyI6WyJhZGRfdG9fY2FydCIsInJlbW92ZV9mcm9tX2NhcnQiLCJ2aWV3X2NhcnQiLCJ2aWV3X3Byb2R1Y3RzIiwic2VhcmNoX3Byb2R1Y3RzIiwiY2hlY2tvdXQiXSwiaWF0IjoxNzI3OTUwMDU5LCJleHAiOjE3MjgwMzY0NTl9.LdCDqZUW7LG2u0IzoaCVLOoQjdeHGnl_Kun6oEoYKEE",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIiLCJlbWFpbCI6ImpvaG5kb2VAZXhhbXBsZS5jb20iLCJwZXJtaXNzaW9ucyI6WyJhZGRfdG9fY2FydCIsInJlbW92ZV9mcm9tX2NhcnQiLCJ2aWV3X2NhcnQiLCJ2aWV3X3Byb2R1Y3RzIiwic2VhcmNoX3Byb2R1Y3RzIiwiY2hlY2tvdXQiXSwiaWF0IjoxNzI4MDI5NzUwLCJleHAiOjE3MjgxMTYxNTB9.0BtxSqlkVmSDcMkTDzQzkuvtzkEzPiHpyUV276ivkhU",
   },
 };
